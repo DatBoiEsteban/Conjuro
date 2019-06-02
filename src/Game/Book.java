@@ -1,3 +1,4 @@
+package Game;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Array;
 
