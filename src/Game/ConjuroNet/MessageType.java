@@ -1,4 +1,4 @@
-package Game.ConjuroNet;
+package ConjuroNet;
 
 public enum MessageType {
     PLAYER_NAME(0),

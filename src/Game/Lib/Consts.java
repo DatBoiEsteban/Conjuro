@@ -1,4 +1,4 @@
-package Game.Lib;
+package Lib;
 
 public interface Consts {
     public static int PORT_NUMBER = 10000;

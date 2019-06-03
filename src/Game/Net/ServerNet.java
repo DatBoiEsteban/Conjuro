@@ -1,6 +1,6 @@
-package Game.Net;
+package Net;
 
-import Game.Lib.*;
+import Lib.*;
 
 import java.net.ServerSocket;
 import java.net.Socket;

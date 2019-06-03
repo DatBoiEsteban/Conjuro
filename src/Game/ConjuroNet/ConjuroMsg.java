@@ -1,6 +1,6 @@
-package Game.ConjuroNet;
+package ConjuroNet;
 
-import Game.Lib.Consts;
+import Lib.Consts;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.util.Hashtable;

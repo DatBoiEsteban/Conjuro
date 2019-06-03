@@ -1,9 +1,9 @@
-package Game.ConjuroNet;
+package ConjuroNet;
 
-import Game.Lib.Consts;
-import Game.Lib.IObserver;
-import Game.Net.ClientSocket;
-import Game.Net.ServerNet;
+import Lib.Consts;
+import Lib.IObserver;
+import Net.ClientSocket;
+import Net.ServerNet;
 
 public class ConjuroComms implements IObserver, Consts {
     private ClientSocket client;
