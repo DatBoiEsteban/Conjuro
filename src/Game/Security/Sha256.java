@@ -42,8 +42,11 @@ public class Sha256 implements Crypto{
 
 @Override
 public String decrypt(byte[] message, Object secretKey) throws Exception {
+	if(new String(message).equals(new String(encrypt((String)secretKey,"")))){
+		return (String)secretKey;
+	}
 	// TODO Auto-generated method stub
-	return null;
+	return message.toString();
 }
 
 @Override
@@ -54,5 +57,12 @@ public Object generateKey() throws NoSuchAlgorithmException {
     return keyPairGenerator.genKeyPair();
 }
 
+public static void main(String [] args) throws  Exception
+{
+	Crypto crypt = new Sha256();
+	Object key1 = crypt.generateKey();
+	byte[] a = crypt.encrypt("caca", "");
 
+	System.out.println(crypt.decrypt(a, "caca"));
+}
 }

@@ -44,7 +44,7 @@ public class Deck implements java.io.Serializable {
 		
 		crypt = new MD5();
 		key1 = crypt.generateKey();
-		DeckCards[2].encryptData(crypt.encrypt(DeckCards[2].getDescripcion(),key1 ), key1, key1, "MD5");
+		DeckCards[2].encryptData(crypt.encrypt(DeckCards[2].getDescripcion(),key1 ), DeckCards[2].getDescripcion(), DeckCards[2].getDescripcion(), "MD5");
 		
 		crypt = new PGP();
 		key1 = crypt.generateKey();
@@ -53,7 +53,7 @@ public class Deck implements java.io.Serializable {
 
 		crypt = new Sha256();
 		key1 = crypt.generateKey();
-		DeckCards[4].encryptData(crypt.encrypt(DeckCards[4].getDescripcion(),key1 ), key1, key1, "Sha256");
+		DeckCards[4].encryptData(crypt.encrypt(DeckCards[4].getDescripcion(),key1 ), DeckCards[2].getDescripcion(), DeckCards[2].getDescripcion(), "Sha256");
 		
 		crypt = new trippleDES();
 		key1 = crypt.generateKey();
@@ -61,9 +61,9 @@ public class Deck implements java.io.Serializable {
 		
 		crypt = new Plain();
 		key1 = crypt.generateKey();
-		DeckCards[6].encryptData(crypt.encrypt(DeckCards[6].getDescripcion(),key1 ), key1, key1, "Plain");
+		DeckCards[6].encryptData(crypt.encrypt(DeckCards[6].getDescripcion(),key1 ), DeckCards[6].getDescripcion(), DeckCards[6].getDescripcion(), "Plain");
 		FileManager file = new FileManager();
-		file.WriteObjectToFile("obj", DeckCards);
+		file.WriteObjectToFile("deck.dck", DeckCards);
 		
 	}
     public static void main(String [] args) throws  Exception

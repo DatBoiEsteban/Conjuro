@@ -12,8 +12,13 @@ public class Plain implements Crypto{
 
 	@Override
 	public String decrypt(byte[] message, Object secretKey) throws Exception {
+		
+		if(new String(message).equals((String)secretKey)){
+			return new String(message);
+
+		}
+		return "NO";
 		// TODO Auto-generated method stub
-		return new String(message);
 	}
 
 	@Override
