@@ -1,9 +1,9 @@
-package Game.Net;
+package Net;
 
-import Game.ConjuroNet.ConjuroMsg;
-import Game.Lib.Consts;
-import Game.Lib.Logger;
-import Game.Lib.Observable;
+import ConjuroNet.ConjuroMsg;
+import Lib.Consts;
+import Lib.Logger;
+import Lib.Observable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

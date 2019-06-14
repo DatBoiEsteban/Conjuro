@@ -1,4 +1,4 @@
-package Game.BusinessNet;
+package BusinessNet;
 
 public class BusinessComms {
 }

@@ -1,4 +1,4 @@
-package Game.Lib;
+package Lib;
 
 public class Logger {
     public static void Log(String pMsg) {
