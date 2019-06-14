@@ -22,7 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class trippleDES implements Crypto{
 	
-    public   Object generateKey() throws NoSuchAlgorithmException {
+    public   SecretKey generateKey() throws NoSuchAlgorithmException {
 
         KeyGenerator keygenerator = KeyGenerator.getInstance("DESede");
         SecretKey desKey = keygenerator.generateKey();    
@@ -51,13 +51,5 @@ public class trippleDES implements Crypto{
     }
 
 
-    public static void main(String [] args) throws  Exception
-    {
-    
-    	Crypto cryp = new trippleDES();
-    	Object caca = cryp.generateKey();
-    	byte [] caca2 =cryp.encrypt("this dick", caca);
-    	System.out.println(cryp.decrypt(caca2, caca));
-    }
 
 }

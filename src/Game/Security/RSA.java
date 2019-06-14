@@ -46,9 +46,9 @@ public class RSA implements Crypto{
     {
     
     	Crypto cryp = new RSA();
-    	Object caca = cryp.generateKey();
-    	byte [] caca2 =cryp.encrypt("this dick2", caca);
-    	System.out.println(cryp.decrypt(caca2, caca));
+    	String caca = new String((byte[]) cryp.generateKey());
+    	System.out.println(caca);
+
     }
 
 

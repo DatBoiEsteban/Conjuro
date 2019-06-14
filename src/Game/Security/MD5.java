@@ -1,6 +1,7 @@
 package Security;
 
 import java.math.BigInteger;
+import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -39,7 +40,9 @@ public class MD5 implements Crypto{
 
 	@Override
 	public Object generateKey() throws NoSuchAlgorithmException {
-		// TODO Auto-generated method stub
-		return null;
+        final int keySize = 2048;
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(keySize);      
+        return keyPairGenerator.genKeyPair().getPrivate().getEncoded();
 	} 
 }
