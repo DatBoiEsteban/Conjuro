@@ -47,33 +47,30 @@ public class AES implements Crypto{
 	    
 	        try
 	        {
-	            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+	            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 	            cipher.init(Cipher.ENCRYPT_MODE, (SecretKeySpec) secretKey);
 	            return cipher.doFinal(value.getBytes("UTF-8"));
 	        }
 	        catch (Exception e)
 	        {
-	            System.out.println("Error while encrypting: " + e.toString());
+				return null;
 	        }
-	        return null;
 	}
     public String decrypt(byte [] encrypted,Object secretKey) throws Exception {
         try
         {
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, (SecretKeySpec) secretKey);
-            return new String(cipher.doFinal(encrypted));
+			System.out.println("Decrypt by AES");
+			String res = new String(cipher.doFinal(encrypted), "UTF-8");
+            return res;
         }
         catch (Exception e)
         {
-            System.out.println("Error while decrypting: " + e.toString());
+	        return "";
         }
-        return null;
     }
 	
 
-    public static void main(String [] args) throws  Exception
-    {
 
-    }
 }

@@ -39,14 +39,21 @@ public class trippleDES implements Crypto{
 		return ciphertext;
     }
 
-    public String decrypt(byte [] encrypted,Object secretKey) throws Exception {
+    public String decrypt(byte [] encrypted,Object secretKey)  {
        
-        	Cipher desCipher = Cipher.getInstance("DESede");
-        	desCipher.init(Cipher.DECRYPT_MODE, (SecretKey) secretKey);
-        	  
-        	byte[] cleartext = desCipher.doFinal(encrypted);
+        	Cipher desCipher;
+			try {
+				desCipher = Cipher.getInstance("DESede");
+	        	desCipher.init(Cipher.DECRYPT_MODE, (SecretKey) secretKey);
+	        	byte[] cleartext = desCipher.doFinal(encrypted);
+				System.out.println("Decrypt by trippleDES");
 
-        return new String(cleartext);
+	            return new String(cleartext);
+
+
+			} catch (Exception e) {
+		        return "";
+			}
     
     }
 
