@@ -33,12 +33,18 @@ public class MD5 implements Crypto{
 
 
 	@Override
-	public String decrypt(byte[] message, Object secretKey) throws Exception {
-		if(new String(message).equals(new String(encrypt((String)secretKey,"")))){
-			return (String)secretKey;
+	public String decrypt(byte[] message, Object secretKey) {
+		try {
+			if(new String(message).equals(new String(encrypt((String)secretKey,"")))){
+				System.out.println("Decrypt by MD5");
+
+				return (String)secretKey;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+	        return "";
 		}
-		// TODO Auto-generated method stub
-		return message.toString();
+        return "";
 	}
 	@Override
 	public Object generateKey() throws NoSuchAlgorithmException {

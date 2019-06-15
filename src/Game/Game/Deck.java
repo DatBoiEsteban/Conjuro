@@ -66,7 +66,13 @@ public class Deck implements java.io.Serializable {
 		file.WriteObjectToFile("deck.dck", DeckCards);
 		
 	}
-    public static void main(String [] args) throws  Exception
+    public Card[] getDeckCards() {
+		return DeckCards;
+	}
+	public void setDeckCards(Card[] deckCards) {
+		DeckCards = deckCards;
+	}
+	public static void main(String [] args) throws  Exception
     {
     	Deck deck = new Deck();
     	deck.generateCards();

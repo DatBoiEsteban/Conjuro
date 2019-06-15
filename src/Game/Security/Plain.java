@@ -7,18 +7,25 @@ public class Plain implements Crypto{
 	@Override
 	public byte[] encrypt(String message, Object secretKey) throws Exception {
 		// TODO Auto-generated method stub
-		return message.getBytes();
+		return message.getBytes("UTF-8");
 	}
 
 	@Override
-	public String decrypt(byte[] message, Object secretKey) throws Exception {
-		
-		if(new String(message).equals((String)secretKey)){
-			return new String(message);
+	public String decrypt(byte[] message, Object secretKey) {
+
+		try {
+			String key = ((String)secretKey);
+
+		if(new String(message).equals(key)){
+			System.out.println("Decrypt by Plain");
+			String res  = new String(message,"UTF-8");	
+			return 	res;}
+		}catch (Exception e){
+	        return "";
 
 		}
-		return "NO";
-		// TODO Auto-generated method stub
+		return "";
+
 	}
 
 	@Override

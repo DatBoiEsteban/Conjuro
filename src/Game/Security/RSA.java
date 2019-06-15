@@ -32,24 +32,24 @@ public class RSA implements Crypto{
         return cipherText;  
     }
     
-    public String decrypt(byte [] encrypted,Object secretKey) throws Exception {
+    public String decrypt(byte [] encrypted,Object secretKey){
+    	try{
         Cipher cipher = Cipher.getInstance("RSA");  
         cipher.init(Cipher.DECRYPT_MODE, ((KeyPair) secretKey).getPublic());
-        
-        return new String(cipher.doFinal(encrypted));
+		System.out.println("Decrypt by RSA");
+		String res = new String(cipher.doFinal(encrypted));
+        return res;
+    	} catch (Exception e) {
+			// TODO Auto-generated catch block
+	        return "";
+		}
+
      
 }
 
 	
 
-    public static void main(String [] args) throws  Exception
-    {
-    
-    	Crypto cryp = new RSA();
-    	String caca = new String((byte[]) cryp.generateKey());
-    	System.out.println(caca);
 
-    }
 
 
 

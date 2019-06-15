@@ -39,25 +39,25 @@ public class PGP implements Crypto{
 		return ciphertext;
     }
 
-    public String decrypt(byte [] encrypted,Object secretKey) throws Exception {
+    public String decrypt(byte [] encrypted,Object secretKey)  {
        
-        	Cipher desCipher = Cipher.getInstance("DESede");
-        	desCipher.init(Cipher.DECRYPT_MODE, (SecretKey) secretKey);
-        	  
-        	byte[] cleartext = desCipher.doFinal(encrypted);
+        	Cipher desCipher;
+			try {
+				desCipher = Cipher.getInstance("DESede");
+	        	desCipher.init(Cipher.DECRYPT_MODE, (SecretKey) secretKey);
+	        	byte[] cleartext = desCipher.doFinal(encrypted);
+				System.out.println("Decrypt by PGP");
 
-        return new String(cleartext);
+	            return new String(cleartext);
+
+
+			} catch (Exception e) {
+		        return "";
+			}
     
     }
 
 
-    public static void main(String [] args) throws  Exception
-    {
-    
-    	Crypto cryp = new trippleDES();
-    	Object caca = cryp.generateKey();
-    	byte [] caca2 =cryp.encrypt("this dick", caca);
-    	System.out.println(cryp.decrypt(caca2, caca));
-    }
+
 
 }
