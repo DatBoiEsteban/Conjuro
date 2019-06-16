@@ -55,9 +55,9 @@ public class ConjuroGui extends JFrame implements Consts {
                         this.connection = new ConjuroComms();
                         this.connection.iniciarJuegoNuevo();
                     } else {
-                        if (this.connection.getServer().getClients().size() > 1) {
+                        if (this.connection.getServer().getClient() != null) {
                             remove(ScreenPanel);
-                            ScreenPanel = new GamePanel(getWidth(), getHeight(), this.connection.getClient());
+                            ScreenPanel = new GamePanel(getWidth(), getHeight(), this.connection.getServer());
                             add(ScreenPanel);
                             repaint();
                         }

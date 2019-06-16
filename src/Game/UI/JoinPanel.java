@@ -27,6 +27,7 @@ public class JoinPanel extends IPanel {
         this.TextField = new JTextField();
         this.TextField.setBounds(this.getWidth()/3, this.getHeight()/2, this.getWidth()/3, 30);
         this.TextField.setToolTipText("Ip address to connect");
+        this.TextField.setText("localhost");
 
         this.ConnectButton = new JButton("Connect!");
         this.ConnectButton.setBounds(getWidth()/3, this.getHeight() * 2 / 3, this.getWidth() / 3, 30);

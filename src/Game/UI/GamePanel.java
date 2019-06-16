@@ -6,6 +6,7 @@ import Game.*;
 import Lib.Consts;
 import Lib.Logger;
 import Net.ClientSocket;
+import Net.ServerNet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,7 @@ public class GamePanel extends IPanel implements Consts {
     private Long StartTime;
     private JTextField ToDecrypt;
     private ClientSocket client;
+    private ServerNet server;
 
     public GamePanel(int Width, int Height, ClientSocket pClient) {
         this.client = pClient;
@@ -36,38 +38,28 @@ public class GamePanel extends IPanel implements Consts {
         this.setBackground(new Color(100));
         this.setLayout(null);
         initComponents();
-        this.StartTime = System.currentTimeMillis();
-        Thread timeTread = new Thread(() -> {
-            while(Thread.currentThread().isAlive()) {
-                Long durationInMillis = System.currentTimeMillis()- this.StartTime;
-                long millis = durationInMillis % 1000;
-                long second = (durationInMillis / 1000) % 60;
-                long minute = (durationInMillis / 60000) % 60;
-                long hour = (durationInMillis / 120000) % 24;
 
-                String time = String.format("%02d:%02d:%02d.%d", hour, minute, second, millis);
-                this.ElapsedTime.setText(time);
-                if (minute == 12) {
-                    System.exit(0);
-                }
-                ArrayList<Card> cardsToSend = this.game.getPlayer().getCardsToSend();
-                if (cardsToSend.size() > 2) {
-                    ConjuroMsg msg = new ConjuroMsg(ArrayList.class);
-                    msg.addObject(cardsToSend);
-                    client.sendMessage(msg);
-                    this.game.getPlayer().cleaCardsToSend();
+    }
 
-                }
-                try {
-                    Thread.sleep(THREAD_SLEEP_TIME);
-                } catch (Exception e) {
-                    Logger.Log(e.getMessage());
-                }
-            }
-        });
-        timeTread.start();
+    public GamePanel (int Width, int Height, ServerNet pServer) {
+        this.server = pServer;
+        this.cardLabels = new ArrayList<>();
+        this.game = new Game();
+        try {
+            this.game.start();
+        } catch (Exception e) {
+            Logger.Log(e.getMessage());
+        }
+        this.setBounds(0, 0, Width, Height);
+        this.setBackground(new Color(100));
+        this.setLayout(null);
+        initComponents();
     }
     private void initComponents() {
+
+
+
+
         PlayerDeck = this.game.getPlayer().getDeck().getDeckCards();
         for (int pos = 0; pos < PlayerDeck.length; pos++) {
             CardLabel cardLabel = new CardLabel(PlayerDeck[pos].getImagen(), (CARD_WIDTH + 10)* pos + 17, getHeight() - CARD_HEIGHT - 50, pos, this.game.getPlayer());
@@ -85,6 +77,41 @@ public class GamePanel extends IPanel implements Consts {
 
         this.add(this.ToDecrypt);
         this.add(this.ElapsedTime);
+
+        this.StartTime = System.currentTimeMillis();
+        Thread timeTread = new Thread(() -> {
+            while(Thread.currentThread().isAlive()) {
+                Long durationInMillis = System.currentTimeMillis()- this.StartTime;
+                long millis = durationInMillis % 1000;
+                long second = (durationInMillis / 1000) % 60;
+                long minute = (durationInMillis / 60000) % 60;
+                long hour = (durationInMillis / 120000) % 24;
+
+                String time = String.format("%02d:%02d:%02d.%d", hour, minute, second, millis);
+                this.ElapsedTime.setText(time);
+                if (minute == 12) {
+                    System.exit(0);
+                }
+                ArrayList<Card> cardsToSend = this.game.getPlayer().getCardsToSend();
+                if (cardsToSend.size() > 2 ) {
+                    ConjuroMsg msg = new ConjuroMsg(ArrayList.class);
+                    msg.addObject(cardsToSend);
+                    if (client != null) {
+                        client.sendMessage(msg);
+                    } else {
+                        server.sendMessage(msg);
+                    }
+
+                    this.game.getPlayer().clearCardsToSend();
+                }
+                try {
+                    Thread.sleep(THREAD_SLEEP_TIME);
+                } catch (Exception e) {
+                    Logger.Log(e.getMessage());
+                }
+            }
+        });
+        timeTread.start();
     }
 
     public void setOtherPlayerCards(ArrayList<Card> pCards) {

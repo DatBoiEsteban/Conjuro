@@ -15,10 +15,18 @@ public class ClientSocket extends Observable implements Consts, Runnable {
     private Socket client;
     private ObjectInputStream inputReader;
     private ObjectOutputStream outputWriter;
-    private boolean isListening;
+    private boolean isListening=true;
     public ClientSocket(Socket pSocket) {
         this.client = pSocket;
         initReaders();
+    }
+
+    public Socket getClient() {
+        return client;
+    }
+
+    public void setClient(Socket client) {
+        this.client = client;
     }
 
     public ClientSocket(String pIp, int pPort) {
@@ -32,9 +40,9 @@ public class ClientSocket extends Observable implements Consts, Runnable {
 
     public void sendMessage(ConjuroMsg pMsg) {
         try {
-        	
             outputWriter.writeObject(pMsg);
             outputWriter.flush();
+            System.out.println("Enviando");
         } catch (Exception ex) {
             Logger.Log(ex.getMessage());
         }
@@ -43,7 +51,6 @@ public class ClientSocket extends Observable implements Consts, Runnable {
     public void run() {
         while (isListening) {
             try {
-
                 ConjuroMsg msg = (ConjuroMsg)inputReader.readObject();
                 this.notifyObservers(msg);
                 Thread.sleep(THREAD_SLEEP_TIME);
@@ -59,21 +66,23 @@ public class ClientSocket extends Observable implements Consts, Runnable {
             outputWriter.close();
             client.close();
         } catch (Exception ex) {
-            //Logger.Log(ex.getMessage());
+            Logger.Log(ex.getMessage());
         }
     }
     public void initReaders() {
         if(client != null) {
             try {
+                isListening = true;
+
                 Thread newThread = new Thread(this);
                 newThread.start();
+                System.out.println("antes");
 
-                outputWriter = new ObjectOutputStream(client.getOutputStream());               
+                outputWriter = new ObjectOutputStream(client.getOutputStream());
                 inputReader = new ObjectInputStream(client.getInputStream());
-                isListening = true;
-         
+
             }
-             catch (Exception ex) {
+            catch (Exception ex) {
                 Logger.Log(ex.getMessage());
             }
         }
