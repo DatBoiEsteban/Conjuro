@@ -5,7 +5,7 @@ import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class MD5 implements Crypto{
+public class MD5 implements Crypto, java.io.Serializable{
 	public byte[] encrypt(String message, Object secretKey) throws Exception {
 	
 

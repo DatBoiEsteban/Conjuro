@@ -6,7 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 
-public class Sha256 implements Crypto{
+public class Sha256 implements Crypto, java.io.Serializable{
 
 	public byte[] encrypt(String message, Object secretKey) throws Exception {
 

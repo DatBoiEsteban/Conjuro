@@ -6,10 +6,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
+import ConjuroNet.ConjuroComms;
+import ConjuroNet.ConjuroMsg;
+import Game.Deck;
+
 public class ServerNet implements Consts, Runnable {
-    private static ServerNet server;
+    private ServerNet server;
     private List<ClientSocket> clients;
-    private ServerSocket serverSocket;
+
+	private ServerSocket serverSocket;
     private boolean isListening;
     private IObserver observer;
     private ServerNet(IObserver pObserver) throws Exception {
@@ -17,17 +22,23 @@ public class ServerNet implements Consts, Runnable {
         this.isListening = true;
         serverSocket = new ServerSocket(PORT_NUMBER);
         this.observer = pObserver;
-    }
-    public synchronized static void startListening(IObserver pObserver) {
+        }
+    
+    public List<ClientSocket> getClients() {
+		return clients;
+	}
+	public void setClients(List<ClientSocket> clients) {
+		this.clients = clients;
+	}
+    public synchronized void startListening(IObserver pObserver) {
         try {
             if (server == null) {
                 server = new ServerNet(pObserver);
             }
-
             Thread listenThread = new Thread(server);
             listenThread.start();
         } catch (Exception ex) {
-            Logger.Log(ex.getMessage());
+           // Logger.Log(ex.getMessage());
         }
 
 
@@ -41,10 +52,11 @@ public class ServerNet implements Consts, Runnable {
                 ClientSocket client = new ClientSocket(newSocket);
                 client.addObserver(this.observer);
                 this.clients.add(client);
+                System.out.println(clients.get(0));
 
                 Thread.sleep(THREAD_SLEEP_TIME);
             } catch (Exception ex) {
-                Logger.Log(ex.getMessage());
+               // Logger.Log(ex.getMessage());
             }
         }
     }
@@ -52,4 +64,10 @@ public class ServerNet implements Consts, Runnable {
     public void stopListen() {
         isListening = false;
     }
+    public static void main(String [] args) throws  Exception
+    {
+    	
+
+
+}
 }

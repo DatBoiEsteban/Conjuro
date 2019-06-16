@@ -2,7 +2,7 @@ package Security;
 
 import java.security.KeyPairGenerator;
 
-public class Plain implements Crypto{
+public class Plain implements Crypto, java.io.Serializable{
 
 	@Override
 	public byte[] encrypt(String message, Object secretKey) throws Exception {

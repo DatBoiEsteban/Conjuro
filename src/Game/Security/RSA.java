@@ -15,7 +15,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-public class RSA implements Crypto{
+public class RSA implements Crypto, java.io.Serializable{
 	
 	
 
