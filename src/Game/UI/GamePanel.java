@@ -1,8 +1,11 @@
 package UI;
 
+import ConjuroNet.ConjuroComms;
+import ConjuroNet.ConjuroMsg;
 import Game.*;
 import Lib.Consts;
 import Lib.Logger;
+import Net.ClientSocket;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,8 +21,10 @@ public class GamePanel extends IPanel implements Consts {
     private JLabel ElapsedTime;
     private Long StartTime;
     private JTextField ToDecrypt;
+    private ClientSocket client;
 
-    public GamePanel(int Width, int Height) {
+    public GamePanel(int Width, int Height, ClientSocket pClient) {
+        this.client = pClient;
         this.cardLabels = new ArrayList<>();
         this.game = new Game();
         try {
@@ -45,6 +50,19 @@ public class GamePanel extends IPanel implements Consts {
                 if (minute == 12) {
                     System.exit(0);
                 }
+                ArrayList<Card> cardsToSend = this.game.getPlayer().getCardsToSend();
+                if (cardsToSend.size() > 2) {
+                    ConjuroMsg msg = new ConjuroMsg(ArrayList.class);
+                    msg.addObject(cardsToSend);
+                    client.sendMessage(msg);
+                    this.game.getPlayer().cleaCardsToSend();
+
+                }
+                try {
+                    Thread.sleep(THREAD_SLEEP_TIME);
+                } catch (Exception e) {
+                    Logger.Log(e.getMessage());
+                }
             }
         });
         timeTread.start();
@@ -69,6 +87,11 @@ public class GamePanel extends IPanel implements Consts {
         this.add(this.ElapsedTime);
     }
 
-
+    public void setOtherPlayerCards(ArrayList<Card> pCards) {
+        for (int i = 0; i < pCards.size(); i++) {
+            CardLabel cardLabel = new CardLabel(pCards.get(i).getImagen(), 300 * (i + 1), 450 - CARD_HEIGHT / 2, i);
+            this.add(cardLabel);
+        }
+    }
 
 }

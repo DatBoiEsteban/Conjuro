@@ -74,7 +74,7 @@ public class ClientSocket extends Observable implements Consts, Runnable {
          
             }
              catch (Exception ex) {
-                //Logger.Log(ex.getMessage());
+                Logger.Log(ex.getMessage());
             }
         }
     }
