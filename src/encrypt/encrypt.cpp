@@ -683,13 +683,23 @@ void getBook(vector<conjuro*> *pConjuros) {
             }
             AES_init_ctx_iv(&ctx, key, iv);
 
-            uint8_t in[300];
-            for (int j = 0; j < pConjuros->at(i)->description.size(); j++) {
-                in[j] = pConjuros->at(i)->description[j];
+            uint8_t in[250] = { 0 };
+            for (int j = 0; j < 250; j++) {
+                if (i < pConjuros->at(i)->description.size()) {
+                    in[j] = pConjuros->at(i)->description[j];
+                } else {
+                    in[j] = 0x20;
+                }
             }
-            AES_CBC_encrypt_buffer(&ctx, in, pConjuros->at(i)->description.size());
-            pConjuros->at(i)->AesEncription = in;
+            cout << "Should be text: " << in << endl;
+            AES_CBC_encrypt_buffer(&ctx, in, 250);
 
+            cout << "Encripted: " << in << endl;
+
+            pConjuros->at(i)->AesEncription = (uint8_t *) malloc(sizeof(in));
+            for (int p = 0; p < sizeof(in); p++) {
+                pConjuros->at(i)->AesEncription[p] = in[p];
+            }
         }
     }
 }
@@ -713,12 +723,11 @@ void createBookFile(vector<conjuro*> *pBook) {
     ofstream Conjures;
     Conjures.open("Book.txt");
     for (int i = 0; i < pBook->size(); i++) {
-        Conjures << "Description: " << pBook->at(i)->description << endl;
+        Conjures << "Descri: " << pBook->at(i)->description << endl;
         Conjures << "Digest: " << pBook->at(i)->digestValue << endl;
         Conjures << "AESKEY: " << pBook->at(i)->AesKey << endl;
-        Conjures << "AESENCRIPTED: " << pBook->at(i)->AesEncription << endl;
+        Conjures << "ENCRIP: " << pBook->at(i)->AesEncription << endl;
     }
-
 }
 
 int main() {
