@@ -65,9 +65,12 @@ public class ConjuroGui extends JFrame implements Consts {
                         }
                     }
                 } else if (ScreenPanel.getClass() == GamePanel.class) {
-                    if (this.connection.getOtherPlayerCards() != null) {
+                    if (this.connection.getOtherPlayerCards() != null&&!game.isDecrypted()) {
                         ((GamePanel) ScreenPanel).setOtherPlayerCards(this.connection.getOtherPlayerCards());
+                       
                         repaint();
+                    }else if (game.isDecrypted()){
+                    	((GamePanel) ScreenPanel).removeCards();
                     }
                 }
                 try {

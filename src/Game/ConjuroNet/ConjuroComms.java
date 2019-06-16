@@ -21,7 +21,8 @@ public class ConjuroComms extends Observable implements IObserver, Consts {
     private ClientSocket client;
     private static ServerNet server;
     private ArrayList<Card> otherPlayerCards;
-    private boolean Hosting;
+    	private boolean Hosting;
+    	
     public ConjuroComms() {
     	Hosting=false;
     	
@@ -63,6 +64,9 @@ public class ConjuroComms extends Observable implements IObserver, Consts {
             this.otherPlayerCards = ((ArrayList<Card>) msg.getObjs().get(0));
 
             msg=null;
+        }else if(msg.getType()==boolean.class){
+        	System.out.println("You Lose");
+        	
         }
 
 

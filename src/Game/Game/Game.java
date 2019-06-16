@@ -22,10 +22,26 @@ public class Game implements Consts, Runnable {
 	private ConjuroComms Connection;
 	private boolean GameStarted;
 	private boolean Decrypted;
+	public boolean isDecrypted() {
+		return Decrypted;
+	}
+	public void setDecrypted(boolean decrypted) {
+		Decrypted = decrypted;
+	}
 
+	private String Key;
+	private int Round;
+	
+	public int getRound() {
+		return Round;
+	}
+	public void setRound(int round) {
+		Round = round;
+	}
 	public void startGame() throws Exception{
 		player = new Player();
 		GameStarted=true;
+		 Round=1;
         Thread listenThread = new Thread((Runnable) this);
         listenThread.start();
 
@@ -33,12 +49,20 @@ public class Game implements Consts, Runnable {
 	}
     public void run() {
         while(GameStarted) {
-    		if(Connection.getOtherPlayerCards()!=null&&Connection.getOtherPlayerCards().size()==3&&!Decrypted){
+    		if(Connection.getOtherPlayerCards()!=null&&Connection.getOtherPlayerCards().size()==3&&!Decrypted&&player.isCardsSent()){
     			oponentCards=Connection.getOtherPlayerCards();
     			try {
 					decryptCards() ;
-					Decrypted=true;
+					ConjuroMsg pMsg = new ConjuroMsg(boolean.class);
+					pMsg.addObject(true);
+					if(Connection.getServer()!=null)
+						Connection.getServer().sendMessage(pMsg );
+					else{
+						Connection.getClient().sendMessage(pMsg);
 
+					}
+					Decrypted=true;
+					Round++;
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

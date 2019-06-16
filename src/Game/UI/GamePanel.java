@@ -19,11 +19,14 @@ public class GamePanel extends IPanel implements Consts {
     private Game game;
     private Card[] PlayerDeck;
     private List<CardLabel> cardLabels;
+    private List<CardLabel> otherPlayer;
+
     private JLabel ElapsedTime;
     private Long StartTime;
     private JTextField ToDecrypt;
     private ClientSocket client;
     private ServerNet server;
+    private boolean restarted;
 
     public GamePanel(int Width, int Height,Game pGame, ClientSocket pClient) {
     	this.game= pGame;
@@ -58,16 +61,11 @@ public class GamePanel extends IPanel implements Consts {
     }
     private void initComponents() {
 
-
+    	restarted=false;
 
 
         PlayerDeck = this.game.getPlayer().getDeck().getDeckCards();
-        for (int pos = 0; pos < PlayerDeck.length; pos++) {
-            CardLabel cardLabel = new CardLabel(PlayerDeck[pos].getImagen(), (CARD_WIDTH + 10)* pos + 17, getHeight() - CARD_HEIGHT - 50, pos, this.game.getPlayer());
-            cardLabels.add(cardLabel);
-            this.add(cardLabel);
-        }
-
+        printPlayerCards();
         this.ElapsedTime = new JLabel();
         this.ElapsedTime.setBounds(40, 40, 100, 30);
         this.ElapsedTime.setForeground(new Color(255,255,255));
@@ -83,6 +81,7 @@ public class GamePanel extends IPanel implements Consts {
         Thread timeTread = new Thread(() -> {
             while(Thread.currentThread().isAlive()) {
                 Long durationInMillis = System.currentTimeMillis()- this.StartTime;
+
                 long millis = durationInMillis % 1000;
                 long second = (durationInMillis / 1000) % 60;
                 long minute = (durationInMillis / 60000) % 60;
@@ -94,16 +93,29 @@ public class GamePanel extends IPanel implements Consts {
                     System.exit(0);
                 }
                 ArrayList<Card> cardsToSend = this.game.getPlayer().getCardsToSend();
-                if (cardsToSend.size() > 2 ) {
+                if (cardsToSend.size() > 2 &&   !this.game.getPlayer().isCardsSent()) {
                     ConjuroMsg msg = new ConjuroMsg(ArrayList.class);
                     msg.addObject(cardsToSend);
+                    this.game.getPlayer().setCardsSent(true);
                     if (client != null) {
                         client.sendMessage(msg);
                     } else {
                         server.sendMessage(msg);
                     }
 
-                    this.game.getPlayer().clearCardsToSend();
+                }
+                if(this.game.getRound()==2&&!restarted){
+                	this.game.getPlayer().ClearCardsSend();
+                	this.game.getPlayer().setCardsSent(false);
+                	removeAll();
+                    this.add(this.ToDecrypt);
+                    this.add(this.ElapsedTime);
+                	printPlayerCards();
+                	game.setOponentCards(new ArrayList<Card>());
+                	restarted = true;
+                	//add your elements
+                	revalidate();
+                	repaint();
                 }
                 try {
                     Thread.sleep(THREAD_SLEEP_TIME);
@@ -114,10 +126,26 @@ public class GamePanel extends IPanel implements Consts {
         });
         timeTread.start();
     }
+    public void printPlayerCards(){
+    	cardLabels = new ArrayList<CardLabel>();
+        for (int pos = 0; pos < PlayerDeck.length; pos++) {
+            CardLabel cardLabel = new CardLabel(PlayerDeck[pos].getImagen(), (CARD_WIDTH + 10)* pos + 17, getHeight() - CARD_HEIGHT - 50, pos, this.game.getPlayer());
+            cardLabels.add(cardLabel);
+            this.add(cardLabel);
+        }
+    }
+    public void removeCards() {
+        for (int i = 0; i < otherPlayer.size(); i++) {
+        	this.remove(otherPlayer.get(i));
 
+        }
+    }
     public void setOtherPlayerCards(ArrayList<Card> pCards) {
+    	otherPlayer= new ArrayList<CardLabel>();
         for (int i = 0; i < pCards.size(); i++) {
             CardLabel cardLabel = new CardLabel(pCards.get(i).getImagen(), 300 * (i + 1), 450 - CARD_HEIGHT / 2, i);
+        	otherPlayer.add(cardLabel);
+
             this.add(cardLabel);
         }
     }
