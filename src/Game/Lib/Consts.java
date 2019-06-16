@@ -9,7 +9,7 @@ public interface Consts {
     public static String MESSAGE_SEPARATOR = ",";
     public static int SCREEN_WIDTH = 1440;
     public static int SCREEN_HEIGHT = 900;
-    public static int CARD_WIDTH = 220;
-    public static int CARD_HEIGHT = 300;
+    public static int CARD_WIDTH = 190;
+    public static int CARD_HEIGHT = 250;
 
 }

@@ -62,8 +62,7 @@ public class Deck implements java.io.Serializable {
 		crypt = new Plain();
 		key1 = crypt.generateKey();
 		DeckCards[6].encryptData(crypt.encrypt(DeckCards[6].getDescripcion(),key1 ), DeckCards[6].getDescripcion(), DeckCards[6].getDescripcion(), "Plain");
-		FileManager file = new FileManager();
-		file.WriteObjectToFile("deck.dck", DeckCards);
+
 		
 	}
     public Card[] getDeckCards() {
@@ -77,8 +76,6 @@ public class Deck implements java.io.Serializable {
     	Deck deck = new Deck();
     	deck.generateCards();
     	deck.cryptCards();
-    
-
 
     }
 	

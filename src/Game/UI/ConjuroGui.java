@@ -1,5 +1,6 @@
 package UI;
 
+import ConjuroNet.ConjuroComms;
 import Lib.Consts;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ public class ConjuroGui extends JFrame implements Consts {
         this.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.ScreenPanel = new StartPanel(SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.ScreenPanel = new StartPanel(SCREEN_WIDTH, SCREEN_HEIGHT); //new StartPanel(SCREEN_WIDTH, SCREEN_HEIGHT);
         this.setTitle("Conjuro");
         this.setResizable(false);
         this.getContentPane().setLayout(null);
@@ -26,21 +27,26 @@ public class ConjuroGui extends JFrame implements Consts {
             while (Thread.currentThread().isAlive()) {
                 if (ScreenPanel.getClass() == StartPanel.class) {
                     if (((StartPanel) ScreenPanel).getHost()) {
-                        ScreenPanel = new HostPanel();
+                        remove(ScreenPanel);
+                        ScreenPanel = new HostPanel(getWidth(), getHeight());
+                        add(ScreenPanel);
+                        repaint();
                     } else if (((StartPanel) ScreenPanel).getJoin()) {
                         remove(ScreenPanel);
                         ScreenPanel = new JoinPanel(getWidth(), getHeight());
                         add(ScreenPanel);
                         repaint();
-                        System.out.println("JOIN");
                     }
                 } else if (ScreenPanel.getClass() == JoinPanel.class) {
                     if (((JoinPanel)ScreenPanel).getTextReady()) {
                         String Ip = ((JoinPanel)ScreenPanel).getIp();
-                        //Conectarse al server TODO
+                        ConjuroComms Client = new ConjuroComms();
+                        Client.conectarAJuego(Ip);
                     }
                 } else if (ScreenPanel.getClass() == HostPanel.class) {
-
+                    ConjuroComms host = new ConjuroComms();
+                    host.iniciarJuegoNuevo();
+                    host.getServer().getClients();
                 }
             }
         });

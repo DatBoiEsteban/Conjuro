@@ -41,12 +41,16 @@ public class FileManager {
     public Object ReadObjectToFile(String filepath) {
    	 
         try {
- 
-			InputStream fileOut = new FileInputStream(filepath);
+        	File file = new File(filepath);
+        	if (file.isFile() && file.canRead()) {
+			InputStream fileOut = new FileInputStream(file);
             ObjectInputStream objectOut = new ObjectInputStream(fileOut);
+            Object res= objectOut.readObject();
             objectOut.close();
+            return res;
 
-            return objectOut.readObject();
+        	}
+            
  
         } catch (Exception ex) {
             ex.printStackTrace();

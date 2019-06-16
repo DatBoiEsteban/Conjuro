@@ -10,18 +10,18 @@ import Security.Sha256;
 import Security.trippleDES;
 
 public class Game {
-	
-	
+
+
 	private Player player;
-	
+
 	public void start() throws Exception{
 		player = new Player();
-		
-		
+
+
 	}
-	
+
 	private void sendCards(Card[] Cards){
-		
+
 	}
 	private void decryptCards(Card[] Cards) throws Exception{
 		Crypto crypt;
@@ -33,7 +33,7 @@ public class Game {
 			if(res.equals(Cards[i].getDescripcion())){
 				Cards[i].setTipo("Sha256");
 				System.out.println("Carta : "+ i + " es Sha256");
-				  continue;
+				continue;
 			}
 			// md5
 			crypt = new MD5();
@@ -42,7 +42,7 @@ public class Game {
 				Cards[i].setTipo("MD5");
 				System.out.println("Carta : "+ i + " es MD5");
 
-				  continue;
+				continue;
 			}
 			// 3des
 			crypt = new trippleDES();
@@ -51,25 +51,25 @@ public class Game {
 				Cards[i].setTipo("trippleDES");
 				System.out.println("Carta : "+ i + " es trippleDES");
 
-				  continue;
+				continue;
 			}
-		//  aes
+			//  aes
 			crypt = new AES();
 			res=crypt.decrypt(Cards[i].getDescripcionCifrada(), Cards[i].getLlave1());
 			if(res.equals(Cards[i].getDescripcion())){
 				Cards[i].setTipo("AES");
 				System.out.println("Carta : "+ i + " es AES");
 
-				  continue;
+				continue;
 			}
-		//   plain
+			//   plain
 			crypt = new Plain();
 			res=crypt.decrypt(Cards[i].getDescripcionCifrada(), Cards[i].getLlave1());
 			if(res.equals(Cards[i].getDescripcion())){
 				Cards[i].setTipo("Plain");
 				System.out.println("Carta : "+ i + " es Plain");
 
-				  continue;
+				continue;
 			}
 			//   rsa
 			crypt = new RSA();
@@ -78,7 +78,7 @@ public class Game {
 				Cards[i].setTipo("RSA");
 				System.out.println("Carta : "+ i + " es RSA");
 
-				  continue;
+				continue;
 			}
 			//   PGP
 			crypt = new PGP();
@@ -87,21 +87,22 @@ public class Game {
 				Cards[i].setTipo("PGP");
 				System.out.println("Carta : "+ i + " es PGP");
 
-				  continue;
+				continue;
 			}
 		}
-		
-		
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public static void main(String [] args) throws  Exception
+	{
+		Deck deck = new Deck();
+		deck.generateCards();
+		deck.cryptCards();
+		Game game = new Game();
+		game.start();
 
 	}
-    public static void main(String [] args) throws  Exception
-    {
-    	Deck deck = new Deck();
-    	deck.generateCards();
-    	deck.cryptCards();
-    	Game game = new Game();
-    	game.decryptCards(deck.getDeckCards());
-
-
-    }
 }
