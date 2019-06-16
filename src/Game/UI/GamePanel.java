@@ -38,6 +38,7 @@ public class GamePanel extends IPanel implements Consts {
         initComponents();
         this.StartTime = System.currentTimeMillis();
         Thread timeTread = new Thread(() -> {
+            Boolean sent = false;
             while(Thread.currentThread().isAlive()) {
                 Long durationInMillis = System.currentTimeMillis()- this.StartTime;
                 long millis = durationInMillis % 1000;
@@ -51,12 +52,12 @@ public class GamePanel extends IPanel implements Consts {
                     System.exit(0);
                 }
                 ArrayList<Card> cardsToSend = this.game.getPlayer().getCardsToSend();
-                if (cardsToSend.size() > 2) {
+                if (cardsToSend.size() > 2 ) {
                     ConjuroMsg msg = new ConjuroMsg(ArrayList.class);
                     msg.addObject(cardsToSend);
                     client.sendMessage(msg);
-                    this.game.getPlayer().cleaCardsToSend();
 
+                    this.game.getPlayer().clearCardsToSend();
                 }
                 try {
                     Thread.sleep(THREAD_SLEEP_TIME);

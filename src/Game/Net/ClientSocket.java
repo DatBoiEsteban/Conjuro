@@ -32,9 +32,9 @@ public class ClientSocket extends Observable implements Consts, Runnable {
 
     public void sendMessage(ConjuroMsg pMsg) {
         try {
-        	
             outputWriter.writeObject(pMsg);
             outputWriter.flush();
+            System.out.println("Enviando");
         } catch (Exception ex) {
             Logger.Log(ex.getMessage());
         }
@@ -43,12 +43,12 @@ public class ClientSocket extends Observable implements Consts, Runnable {
     public void run() {
         while (isListening) {
             try {
-
+                System.out.println("Daar se la come");
                 ConjuroMsg msg = (ConjuroMsg)inputReader.readObject();
                 this.notifyObservers(msg);
                 Thread.sleep(THREAD_SLEEP_TIME);
             } catch (Exception ex) {
-                //Logger.Log(ex.getMessage());
+                Logger.Log(ex.getMessage());
             }
         }
     }
@@ -59,7 +59,7 @@ public class ClientSocket extends Observable implements Consts, Runnable {
             outputWriter.close();
             client.close();
         } catch (Exception ex) {
-            //Logger.Log(ex.getMessage());
+            Logger.Log(ex.getMessage());
         }
     }
     public void initReaders() {
@@ -67,6 +67,7 @@ public class ClientSocket extends Observable implements Consts, Runnable {
             try {
                 Thread newThread = new Thread(this);
                 newThread.start();
+                this.run();
 
                 outputWriter = new ObjectOutputStream(client.getOutputStream());               
                 inputReader = new ObjectInputStream(client.getInputStream());

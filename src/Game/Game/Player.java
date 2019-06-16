@@ -45,10 +45,8 @@ public class Player {
 		return this.cardsToSend;
 	}
 
-	public void cleaCardsToSend() {
-		for (int i = 0; i < this.cardsToSend.size(); i++) {
-			this.cardsToSend.remove(0);
-		}
+	public void clearCardsToSend() {
+		this.cardsToSend = new ArrayList<Card>();
 	}
 
 }
