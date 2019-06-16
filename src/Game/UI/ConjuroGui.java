@@ -1,5 +1,6 @@
 package UI;
 
+import ConjuroNet.ConjuroComms;
 import Lib.Consts;
 
 import javax.swing.*;
@@ -39,10 +40,13 @@ public class ConjuroGui extends JFrame implements Consts {
                 } else if (ScreenPanel.getClass() == JoinPanel.class) {
                     if (((JoinPanel)ScreenPanel).getTextReady()) {
                         String Ip = ((JoinPanel)ScreenPanel).getIp();
-                        //Conectarse al server TODO
+                        ConjuroComms Client = new ConjuroComms();
+                        Client.conectarAJuego(Ip);
                     }
                 } else if (ScreenPanel.getClass() == HostPanel.class) {
-                    // if jugadores != empty cambie a GamePanel
+                    ConjuroComms host = new ConjuroComms();
+                    host.iniciarJuegoNuevo();
+                    host.getServer().getClients();
                 }
             }
         });
