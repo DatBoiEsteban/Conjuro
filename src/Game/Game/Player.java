@@ -14,7 +14,6 @@ public class Player {
 		cardsToSend = new ArrayList<Card>();
 		FileManager file = new FileManager();
 		deck=(Deck) file.ReadObjectToFile("deck.dck");
-		System.out.println(deck);
 		if(deck == null){
 			deck= new Deck();
 			deck.generateCards();
@@ -40,6 +39,16 @@ public class Player {
 			return true;
 		}
 		return false;
+	}
+
+	public ArrayList<Card> getCardsToSend() {
+		return this.cardsToSend;
+	}
+
+	public void cleaCardsToSend() {
+		for (int i = 0; i < this.cardsToSend.size(); i++) {
+			this.cardsToSend.remove(0);
+		}
 	}
 
 }

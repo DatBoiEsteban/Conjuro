@@ -28,6 +28,17 @@ public class CardLabel extends JLabel implements Consts, MouseListener {
         this.setBounds(PosX, PosY, CARD_WIDTH, CARD_HEIGHT);
         this.addMouseListener(this);
     }
+    public CardLabel(String Name, int PosX, int PosY, int ListPos) {
+        this.Name = Name;
+        this.Player = null;
+        this.image = new ImageIcon(Name);
+        this.ListPos = ListPos;
+        Image image = this.image.getImage();
+        Image newimg = image.getScaledInstance(CARD_WIDTH, CARD_HEIGHT,  java.awt.Image.SCALE_SMOOTH);
+        this.image = new ImageIcon(newimg);
+        this.setIcon(this.image);
+        this.setBounds(PosX, PosY, CARD_WIDTH, CARD_HEIGHT);
+    }
 
 
     @Override

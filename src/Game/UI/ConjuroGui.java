@@ -2,6 +2,7 @@ package UI;
 
 import ConjuroNet.ConjuroComms;
 import Lib.Consts;
+import Lib.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class ConjuroGui extends JFrame implements Consts {
                         this.connection.conectarAJuego(Ip);
                         if (this.connection.isConnected()) {
                             remove(ScreenPanel);
-                            ScreenPanel = new GamePanel(getWidth(), getHeight());
+                            ScreenPanel = new GamePanel(getWidth(), getHeight(), this.connection.getClient());
                             add(ScreenPanel);
                             repaint();
                         }
@@ -56,11 +57,22 @@ public class ConjuroGui extends JFrame implements Consts {
                     } else {
                         if (this.connection.getServer().getClients().size() > 1) {
                             remove(ScreenPanel);
-                            ScreenPanel = new GamePanel(getWidth(), getHeight());
+                            ScreenPanel = new GamePanel(getWidth(), getHeight(), this.connection.getClient());
                             add(ScreenPanel);
                             repaint();
                         }
                     }
+                } else if (ScreenPanel.getClass() == GamePanel.class) {
+                    if (this.connection.getOtherPlayerCards() != null) {
+                        ((GamePanel) ScreenPanel).setOtherPlayerCards(this.connection.getOtherPlayerCards());
+                        this.connection.clearOtherPlayerCards();
+                        repaint();
+                    }
+                }
+                try {
+                    Thread.sleep(THREAD_SLEEP_TIME);
+                } catch (Exception e) {
+                    Logger.Log(e.getMessage());
                 }
             }
         });

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import Game.Card;
 import Game.Deck;
@@ -17,6 +18,7 @@ import Net.ServerNet;
 public class ConjuroComms implements IObserver, Consts {
     private ClientSocket client;
     private static ServerNet server;
+    private ArrayList<Card> otherPlayerCards;
 
     public ConjuroComms() {
 
@@ -45,11 +47,20 @@ public class ConjuroComms implements IObserver, Consts {
         if (msg.getType()==Deck.class) {
         	System.out.println("Deck");
         }
+        else if (msg.getType() == ArrayList.class) {
+            this.otherPlayerCards = ((ArrayList<Card>) msg.getObjs().get(0));
+        }
 
         
     }
-    
-    
+
+    public ArrayList<Card> getOtherPlayerCards() {
+        return this.otherPlayerCards;
+    }
+    public void clearOtherPlayerCards() {
+        this.otherPlayerCards = null;
+    }
+
     public ClientSocket getClient() {
 		return client;
 	}

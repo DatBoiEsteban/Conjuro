@@ -22,6 +22,7 @@ public class ServerNet implements Consts, Runnable {
         this.isListening = true;
         serverSocket = new ServerSocket(PORT_NUMBER);
         this.observer = pObserver;
+        this.server = this;
         }
     
     public List<ClientSocket> getClients() {
@@ -38,7 +39,7 @@ public class ServerNet implements Consts, Runnable {
             Thread listenThread = new Thread(server);
             listenThread.start();
         } catch (Exception ex) {
-           // Logger.Log(ex.getMessage());
+            Logger.Log(ex.getMessage());
         }
 
 
