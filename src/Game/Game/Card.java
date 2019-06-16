@@ -66,4 +66,13 @@ public class Card implements java.io.Serializable{
 	public String getImagen() {
 		return this.Imagen;
 	}
+	public void CloneWithoutType(Card pCard){
+		pCard.Descripcion= this.Descripcion;
+		pCard.DescripcionCifrada= this.DescripcionCifrada;
+		pCard.Nombre= this.Nombre;
+		pCard.Llave1= this.Llave1;
+		pCard.Imagen= this.Imagen;
+		pCard.Llave2= this.Llave2;
+
+	}
 }

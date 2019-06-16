@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class Player {
 	private Deck deck;
-	private Card[] oponentCards ;
 	private ArrayList<Card> cardsToSend;
 
 	public Player() throws Exception{
@@ -24,18 +23,21 @@ public class Player {
 		
 	}
 
+
+
+
+
 	public Deck getDeck() {
 		return this.deck;
 	}
 
-	public static void main(String [] args) throws  Exception
-    {
-		Player deck = new Player();
-    }
+
 
     public Boolean addCardsToSend(Card pCard) {
 		if (this.cardsToSend.size() < 3) {
-			this.cardsToSend.add(pCard);
+			Card temp = new Card(null, null, null);
+			pCard.CloneWithoutType(temp);
+			this.cardsToSend.add(temp);
 			return true;
 		}
 		return false;

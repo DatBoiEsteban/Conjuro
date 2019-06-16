@@ -15,8 +15,10 @@ public class Plain implements Crypto, java.io.Serializable{
 
 		try {
 			String key = ((String)secretKey);
+			System.out.println(key);
+			System.out.println(new String(message,"UTF-8"));
 
-		if(new String(message).equals(key)){
+		if(new String(message,"UTF-8").equals(key)){
 			System.out.println("Decrypt by Plain");
 			String res  = new String(message,"UTF-8");	
 			return 	res;}

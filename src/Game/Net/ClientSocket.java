@@ -40,8 +40,11 @@ public class ClientSocket extends Observable implements Consts, Runnable {
 
     public void sendMessage(ConjuroMsg pMsg) {
         try {
+        	
             outputWriter.writeObject(pMsg);
+
             outputWriter.flush();
+            
             System.out.println("Enviando");
         } catch (Exception ex) {
             Logger.Log(ex.getMessage());

@@ -53,7 +53,7 @@ public class Deck implements java.io.Serializable {
 
 		crypt = new Sha256();
 		key1 = crypt.generateKey();
-		DeckCards[4].encryptData(crypt.encrypt(DeckCards[4].getDescripcion(),key1 ), DeckCards[2].getDescripcion(), DeckCards[2].getDescripcion(), "Sha256");
+		DeckCards[4].encryptData(crypt.encrypt(DeckCards[4].getDescripcion(),key1 ), DeckCards[4].getDescripcion(), DeckCards[4].getDescripcion(), "Sha256");
 		
 		crypt = new trippleDES();
 		key1 = crypt.generateKey();
@@ -71,12 +71,6 @@ public class Deck implements java.io.Serializable {
 	public void setDeckCards(Card[] deckCards) {
 		DeckCards = deckCards;
 	}
-	public static void main(String [] args) throws  Exception
-    {
-    	Deck deck = new Deck();
-    	deck.generateCards();
-    	deck.cryptCards();
 
-    }
 	
 }

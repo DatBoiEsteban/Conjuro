@@ -1,5 +1,10 @@
 package Game;
 
+import java.util.ArrayList;
+
+import ConjuroNet.ConjuroComms;
+import ConjuroNet.ConjuroMsg;
+import Lib.Consts;
 import Security.AES;
 import Security.Crypto;
 import Security.MD5;
@@ -9,86 +14,127 @@ import Security.RSA;
 import Security.Sha256;
 import Security.trippleDES;
 
-public class Game {
+public class Game implements Consts, Runnable {
 
 
 	private Player player;
+	private ArrayList<Card>  oponentCards ;
+	private ConjuroComms Connection;
+	private boolean GameStarted;
+	private boolean Decrypted;
 
-	public void start() throws Exception{
+	public void startGame() throws Exception{
 		player = new Player();
+		GameStarted=true;
+        Thread listenThread = new Thread((Runnable) this);
+        listenThread.start();
 
 
 	}
+    public void run() {
+        while(GameStarted) {
+    		if(Connection.getOtherPlayerCards()!=null&&Connection.getOtherPlayerCards().size()==3&&!Decrypted){
+    			oponentCards=Connection.getOtherPlayerCards();
+    			try {
+					decryptCards() ;
+					Decrypted=true;
 
-	private void sendCards(Card[] Cards){
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+            try {
+				Thread.sleep(THREAD_SLEEP_TIME*10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
+
+        }
+     
+    }
+	public  Game(ConjuroComms pConnection){
+		Connection=pConnection;
 	}
-	private void decryptCards(Card[] Cards) throws Exception{
+
+	
+	public ArrayList<Card> getOponentCards() {
+		return oponentCards;
+	}
+
+
+	public void setOponentCards(ArrayList<Card> oponentCards) {
+		this.oponentCards = oponentCards;
+	}
+	private void decryptCards() throws Exception{
 		Crypto crypt;
 		String res= "";
-		for(int i=0; i<Cards.length;i++){
+		for(int i=0; i<oponentCards.size();i++){
 			//sha256			
 			crypt = new Sha256();
-			res=crypt.decrypt(Cards[i].getDescripcionCifrada(), Cards[i].getLlave1());
-			if(res.equals(Cards[i].getDescripcion())){
-				Cards[i].setTipo("Sha256");
+			res=crypt.decrypt(oponentCards.get(i).getDescripcionCifrada(), oponentCards.get(i).getLlave1());
+			if(res.equals(oponentCards.get(i).getDescripcion())){
+				oponentCards.get(i).setTipo("Sha256");
 				System.out.println("Carta : "+ i + " es Sha256");
+
 				continue;
 			}
 			// md5
 			crypt = new MD5();
-			res=crypt.decrypt(Cards[i].getDescripcionCifrada(), Cards[i].getLlave1());
-			if(res.equals(Cards[i].getDescripcion())){
-				Cards[i].setTipo("MD5");
+			res=crypt.decrypt(oponentCards.get(i).getDescripcionCifrada(), oponentCards.get(i).getLlave1());
+			if(res.equals(oponentCards.get(i).getDescripcion())){
+				oponentCards.get(i).setTipo("MD5");
 				System.out.println("Carta : "+ i + " es MD5");
 
 				continue;
 			}
 			// 3des
 			crypt = new trippleDES();
-			res=crypt.decrypt(Cards[i].getDescripcionCifrada(), Cards[i].getLlave1());
-			if(res.equals(Cards[i].getDescripcion())){
-				Cards[i].setTipo("trippleDES");
+			res=crypt.decrypt(oponentCards.get(i).getDescripcionCifrada(), oponentCards.get(i).getLlave1());
+			if(res.equals(oponentCards.get(i).getDescripcion())){
+				oponentCards.get(i).setTipo("trippleDES");
 				System.out.println("Carta : "+ i + " es trippleDES");
 
 				continue;
 			}
 			//  aes
 			crypt = new AES();
-			res=crypt.decrypt(Cards[i].getDescripcionCifrada(), Cards[i].getLlave1());
-			if(res.equals(Cards[i].getDescripcion())){
-				Cards[i].setTipo("AES");
+			res=crypt.decrypt(oponentCards.get(i).getDescripcionCifrada(), oponentCards.get(i).getLlave1());
+			if(res.equals(oponentCards.get(i).getDescripcion())){
+				oponentCards.get(i).setTipo("AES");
 				System.out.println("Carta : "+ i + " es AES");
 
 				continue;
 			}
 			//   plain
 			crypt = new Plain();
-			res=crypt.decrypt(Cards[i].getDescripcionCifrada(), Cards[i].getLlave1());
-			if(res.equals(Cards[i].getDescripcion())){
-				Cards[i].setTipo("Plain");
+			res=crypt.decrypt(oponentCards.get(i).getDescripcionCifrada(), oponentCards.get(i).getLlave1());
+			if(res.equals(oponentCards.get(i).getDescripcion())){
+				oponentCards.get(i).setTipo("Plain");
 				System.out.println("Carta : "+ i + " es Plain");
 
 				continue;
 			}
 			//   rsa
 			crypt = new RSA();
-			res=crypt.decrypt(Cards[i].getDescripcionCifrada(), Cards[i].getLlave1());
-			if(res.equals(Cards[i].getDescripcion())){
-				Cards[i].setTipo("RSA");
+			res=crypt.decrypt(oponentCards.get(i).getDescripcionCifrada(), oponentCards.get(i).getLlave1());
+			if(res.equals(oponentCards.get(i).getDescripcion())){
+				oponentCards.get(i).setTipo("RSA");
 				System.out.println("Carta : "+ i + " es RSA");
 
 				continue;
 			}
 			//   PGP
 			crypt = new PGP();
-			res=crypt.decrypt(Cards[i].getDescripcionCifrada(), Cards[i].getLlave1());
-			if(res.equals(Cards[i].getDescripcion())){
-				Cards[i].setTipo("PGP");
+			res=crypt.decrypt(oponentCards.get(i).getDescripcionCifrada(), oponentCards.get(i).getLlave1());
+			if(res.equals(oponentCards.get(i).getDescripcion())){
+				oponentCards.get(i).setTipo("PGP");
 				System.out.println("Carta : "+ i + " es PGP");
-
 				continue;
 			}
+			System.out.println("Failure");
 		}
 	}
 
@@ -96,13 +142,5 @@ public class Game {
 		return player;
 	}
 
-	public static void main(String [] args) throws  Exception
-	{
-		Deck deck = new Deck();
-		deck.generateCards();
-		deck.cryptCards();
-		Game game = new Game();
-		game.start();
 
-	}
 }
