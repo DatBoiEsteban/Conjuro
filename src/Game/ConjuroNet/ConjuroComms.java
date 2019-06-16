@@ -10,12 +10,13 @@ import Game.Deck;
 import Game.Game;
 import Lib.Consts;
 import Lib.IObserver;
+import Lib.Logger;
 import Net.ClientSocket;
 import Net.ServerNet;
 
 public class ConjuroComms implements IObserver, Consts {
     private ClientSocket client;
-    private ServerNet server;
+    private static ServerNet server;
 
     public ConjuroComms() {
 
@@ -28,6 +29,11 @@ public class ConjuroComms implements IObserver, Consts {
     }
 
     public void iniciarJuegoNuevo() {
+        try {
+            server = new ServerNet(this);
+        }catch (Exception e ) {
+            Logger.Log(e.getMessage());
+        }
     	server.startListening(this);
         conectarAJuego("127.0.0.1");
 
@@ -59,6 +65,10 @@ public class ConjuroComms implements IObserver, Consts {
 	public void setServer(ServerNet server) {
 		this.server = server;
 	}
+
+	public Boolean isConnected() {
+        return this.client.isConnected();
+    }
 
 	public static void main(String [] args) throws  Exception
     {

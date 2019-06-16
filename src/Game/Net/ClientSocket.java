@@ -15,7 +15,7 @@ public class ClientSocket extends Observable implements Consts, Runnable {
     private Socket client;
     private ObjectInputStream inputReader;
     private ObjectOutputStream outputWriter;
-    private boolean isListening= true ;
+    private boolean isListening;
     public ClientSocket(Socket pSocket) {
         this.client = pSocket;
         initReaders();
@@ -70,13 +70,17 @@ public class ClientSocket extends Observable implements Consts, Runnable {
 
                 outputWriter = new ObjectOutputStream(client.getOutputStream());               
                 inputReader = new ObjectInputStream(client.getInputStream());
-
+                isListening = true;
          
             }
              catch (Exception ex) {
                 //Logger.Log(ex.getMessage());
             }
         }
+    }
+
+    public Boolean isConnected() {
+        return this.isListening;
     }
 
 }
