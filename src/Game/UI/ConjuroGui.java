@@ -13,7 +13,7 @@ public class ConjuroGui extends JFrame implements Consts {
         this.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.ScreenPanel = new StartPanel(SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.ScreenPanel = new StartPanel(SCREEN_WIDTH, SCREEN_HEIGHT); //new StartPanel(SCREEN_WIDTH, SCREEN_HEIGHT);
         this.setTitle("Conjuro");
         this.setResizable(false);
         this.getContentPane().setLayout(null);
@@ -26,13 +26,15 @@ public class ConjuroGui extends JFrame implements Consts {
             while (Thread.currentThread().isAlive()) {
                 if (ScreenPanel.getClass() == StartPanel.class) {
                     if (((StartPanel) ScreenPanel).getHost()) {
-                        ScreenPanel = new HostPanel();
+                        remove(ScreenPanel);
+                        ScreenPanel = new HostPanel(getWidth(), getHeight());
+                        add(ScreenPanel);
+                        repaint();
                     } else if (((StartPanel) ScreenPanel).getJoin()) {
                         remove(ScreenPanel);
                         ScreenPanel = new JoinPanel(getWidth(), getHeight());
                         add(ScreenPanel);
                         repaint();
-                        System.out.println("JOIN");
                     }
                 } else if (ScreenPanel.getClass() == JoinPanel.class) {
                     if (((JoinPanel)ScreenPanel).getTextReady()) {
@@ -40,7 +42,7 @@ public class ConjuroGui extends JFrame implements Consts {
                         //Conectarse al server TODO
                     }
                 } else if (ScreenPanel.getClass() == HostPanel.class) {
-
+                    // if jugadores != empty cambie a GamePanel
                 }
             }
         });

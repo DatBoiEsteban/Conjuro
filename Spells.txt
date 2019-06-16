@@ -1,0 +1,7 @@
+CELESTIAL For the duration, you know if there is an aberration, celestial, elemental, fey, fiend, or undead within 30 feet of you, as well as where the creature is located. Similarly, you know if there is a place or object.
+FEAST You bring forth a great feast, including magnificent food and drink. The feast takes 1 hour to consume and disappears at the end of that time, and the beneficial effects don’t set in until this hour is over
+PRISON An immobile, invisible, cube-shaped prison composed of magical force springs into existence around an area you choose within range. The prison can be a cage or a solid box as you choose.
+THROW Choose one creature you can see within range. Yellow strips of magical energy loop around the creature. The target must succeed on a Strength saving throw or its flying speedis reduced to 0 feet for the spell’s duration.
+MIND You reach into the mind of one creature you can see within range. The target must make a Wisdom saving throw, taking 3d8 psychic damage on a failed save, or half as much damage on a successful one. 
+ELEMENTAL You beseech an otherworldly entity for aid.The being must be known to you: a god, a primordial, a demon prince, or some other being of cosmic power. That entity sends a celestial, an elemental.
+RESISTANCE You have resistance to acid, cold, fire, lightning, and thunder damage for the spell’s duration.When you take damage of one of those types, you can use your reaction to gain immunity to that typeof damage.

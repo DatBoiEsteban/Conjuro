@@ -63,11 +63,7 @@ public class Card implements java.io.Serializable{
 	public void setLlave2(Object llave2) {
 		Llave2 = llave2;
 	}
-
-
-	
-	
-
-
-
+	public String getImagen() {
+		return this.Imagen;
+	}
 }
