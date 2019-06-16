@@ -9,6 +9,7 @@ import java.awt.*;
 public class ConjuroGui extends JFrame implements Consts {
 
     private IPanel ScreenPanel;
+    private ConjuroComms connection;
 
     public ConjuroGui() {
         this.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -18,7 +19,6 @@ public class ConjuroGui extends JFrame implements Consts {
         this.setTitle("Conjuro");
         this.setResizable(false);
         this.getContentPane().setLayout(null);
-        initComponents();
         this.getContentPane().add(this.ScreenPanel);
         this.pack();
         this.setLocationRelativeTo(null);
@@ -40,21 +40,31 @@ public class ConjuroGui extends JFrame implements Consts {
                 } else if (ScreenPanel.getClass() == JoinPanel.class) {
                     if (((JoinPanel)ScreenPanel).getTextReady()) {
                         String Ip = ((JoinPanel)ScreenPanel).getIp();
-                        ConjuroComms Client = new ConjuroComms();
-                        Client.conectarAJuego(Ip);
+                        this.connection = new ConjuroComms();
+                        this.connection.conectarAJuego(Ip);
+                        if (this.connection.isConnected()) {
+                            remove(ScreenPanel);
+                            ScreenPanel = new GamePanel(getWidth(), getHeight());
+                            add(ScreenPanel);
+                            repaint();
+                        }
                     }
                 } else if (ScreenPanel.getClass() == HostPanel.class) {
-                    ConjuroComms host = new ConjuroComms();
-                    host.iniciarJuegoNuevo();
-                    host.getServer().getClients();
+                    if (this.connection == null) {
+                        this.connection = new ConjuroComms();
+                        this.connection.iniciarJuegoNuevo();
+                    } else {
+                        if (this.connection.getServer().getClients().size() > 1) {
+                            remove(ScreenPanel);
+                            ScreenPanel = new GamePanel(getWidth(), getHeight());
+                            add(ScreenPanel);
+                            repaint();
+                        }
+                    }
                 }
             }
         });
         PanelChanger.start();
-    }
-
-    public void initComponents() {
-
     }
 
     public static void main(String[] args) {

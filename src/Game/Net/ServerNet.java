@@ -17,7 +17,7 @@ public class ServerNet implements Consts, Runnable {
 	private ServerSocket serverSocket;
     private boolean isListening;
     private IObserver observer;
-    private ServerNet(IObserver pObserver) throws Exception {
+    public ServerNet(IObserver pObserver) throws Exception {
         this.clients = new ArrayList<>();
         this.isListening = true;
         serverSocket = new ServerSocket(PORT_NUMBER);
