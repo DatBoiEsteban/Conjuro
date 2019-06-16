@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.List;
 
 public class GamePanel extends IPanel implements Consts {
+
     private Game game;
     private Card[] PlayerDeck;
     private List<CardLabel> cardLabels;
@@ -56,10 +57,6 @@ public class GamePanel extends IPanel implements Consts {
         initComponents();
     }
     private void initComponents() {
-
-
-
-
         PlayerDeck = this.game.getPlayer().getDeck().getDeckCards();
         for (int pos = 0; pos < PlayerDeck.length; pos++) {
             CardLabel cardLabel = new CardLabel(PlayerDeck[pos].getImagen(), (CARD_WIDTH + 10)* pos + 17, getHeight() - CARD_HEIGHT - 50, pos, this.game.getPlayer());
@@ -103,11 +100,6 @@ public class GamePanel extends IPanel implements Consts {
                     }
 
                     this.game.getPlayer().clearCardsToSend();
-                }
-                try {
-                    Thread.sleep(THREAD_SLEEP_TIME);
-                } catch (Exception e) {
-                    Logger.Log(e.getMessage());
                 }
             }
         });
