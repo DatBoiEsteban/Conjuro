@@ -20,7 +20,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AES implements Crypto{
+public class AES implements Crypto, java.io.Serializable{
     public   Object generateKey() throws NoSuchAlgorithmException, UnsupportedEncodingException     {
         MessageDigest sha = null;
         try {

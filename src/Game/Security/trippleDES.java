@@ -20,7 +20,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class trippleDES implements Crypto{
+public class trippleDES implements Crypto, java.io.Serializable{
 	
     public   SecretKey generateKey() throws NoSuchAlgorithmException {
 

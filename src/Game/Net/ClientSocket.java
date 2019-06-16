@@ -7,13 +7,15 @@ import Lib.Observable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientSocket extends Observable implements Consts, Runnable {
     private Socket client;
-    private DataInputStream inputReader;
-    private DataOutputStream outputWriter;
-    private boolean isListening;
+    private ObjectInputStream inputReader;
+    private ObjectOutputStream outputWriter;
+    private boolean isListening= true ;
     public ClientSocket(Socket pSocket) {
         this.client = pSocket;
         initReaders();
@@ -30,7 +32,8 @@ public class ClientSocket extends Observable implements Consts, Runnable {
 
     public void sendMessage(ConjuroMsg pMsg) {
         try {
-            outputWriter.writeChars(pMsg.getStringMsg());
+        	
+            outputWriter.writeObject(pMsg);
             outputWriter.flush();
         } catch (Exception ex) {
             Logger.Log(ex.getMessage());
@@ -40,13 +43,12 @@ public class ClientSocket extends Observable implements Consts, Runnable {
     public void run() {
         while (isListening) {
             try {
-                String msgData = inputReader.readUTF();
 
-                ConjuroMsg msg = new ConjuroMsg(msgData);
+                ConjuroMsg msg = (ConjuroMsg)inputReader.readObject();
                 this.notifyObservers(msg);
                 Thread.sleep(THREAD_SLEEP_TIME);
             } catch (Exception ex) {
-                Logger.Log(ex.getMessage());
+                //Logger.Log(ex.getMessage());
             }
         }
     }
@@ -57,23 +59,24 @@ public class ClientSocket extends Observable implements Consts, Runnable {
             outputWriter.close();
             client.close();
         } catch (Exception ex) {
-            Logger.Log(ex.getMessage());
+            //Logger.Log(ex.getMessage());
         }
     }
     public void initReaders() {
         if(client != null) {
             try {
-                inputReader = new DataInputStream(client.getInputStream());
-                outputWriter = new DataOutputStream(client.getOutputStream());
-
                 Thread newThread = new Thread(this);
                 newThread.start();
-            } catch (Exception ex) {
-                Logger.Log(ex.getMessage());
+
+                outputWriter = new ObjectOutputStream(client.getOutputStream());               
+                inputReader = new ObjectInputStream(client.getInputStream());
+
+         
+            }
+             catch (Exception ex) {
+                //Logger.Log(ex.getMessage());
             }
         }
     }
-    public void sendMessage() { //TODO
 
-    }
 }

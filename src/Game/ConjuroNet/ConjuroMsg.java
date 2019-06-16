@@ -3,52 +3,59 @@ package ConjuroNet;
 import Lib.Consts;
 
 import java.lang.management.GarbageCollectorMXBean;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class ConjuroMsg implements Consts {
-    private Hashtable<String, String> values;
-    private MessageType type;
-    public ConjuroMsg(String pData) {
-        String[] msgValues = pData.split(MESSAGE_SEPARATOR);
-        if (msgValues != null && msgValues.length > 0) {
-            type = MessageType.valueOf(msgValues[0]);
-
-            values = new Hashtable<>();
-            for (int valuesIndex = 1; valuesIndex < msgValues.length; valuesIndex++) {
-                String[] keyMap = msgValues[valuesIndex].split(MESSAGE_VALUES_SEPARATOR);
-                values.put(keyMap[0], keyMap[1]);
-            }
-        }
+public class ConjuroMsg implements Consts, java.io.Serializable {
+    private ArrayList<Object> Objs = new ArrayList<Object>();
+    private Class<?> type;
+    
+    public ConjuroMsg(Class<?> pType) {
+    	type = pType;
     }
 
-    public ConjuroMsg(MessageType pType) {
-        this.type = pType;
-        values = new Hashtable<>();
+    
+    public void addObject(Object pObj){
+    	Objs.add(pObj);
     }
+	public ArrayList<Object> getobjs() {
+		return Objs;
+	}
 
-    public String getValue(String pKey) {
-        String result = "";
-        result = values.contains(pKey) ? values.get(pKey) : result;
-        return result;
-    }
+	public void setobjs(ArrayList<Object> pObjs) {
+		this.Objs = pObjs;
+	}
 
-    public void addValue(String pKey, String pValue) {
-        values.put(pKey, pValue);
-    }
 
-    public String getStringMsg() {
-        String result = "";
-        String comma = "";
-        result = result.concat(this.type.toString()+MESSAGE_SEPARATOR);
-        for (String key: this.values.keySet()) {
-            result = result.concat(comma);
-            result = result.concat(key + MESSAGE_VALUES_SEPARATOR + values.get(key));
-            result = MESSAGE_SEPARATOR;
-        }
-        return result;
-    }
+	public ArrayList<Object> getObjs() {
+		return Objs;
+	}
 
-    public MessageType getType () {
-        return this.type;
-    }
+
+	public void setObjs(ArrayList<Object> objs) {
+		Objs = objs;
+	}
+
+
+	public Class<?> getType() {
+		return type;
+	}
+
+
+	public void setType(Class<?> type) {
+		this.type = type;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -20,7 +20,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class PGP implements Crypto{
+public class PGP implements Crypto, java.io.Serializable{
 	
     public   SecretKey generateKey() throws NoSuchAlgorithmException {
 
