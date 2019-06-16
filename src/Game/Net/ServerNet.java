@@ -120,17 +120,8 @@ public class ServerNet extends Observable implements Consts, Runnable {
 
     public static void main(String [] args) throws  Exception
     {
-        ConjuroComms server2 = new ConjuroComms();
+        //ConjuroComms server2 = new ConjuroComms();
 
-        server2.iniciarJuegoNuevo();
-        while(server2.getServer().client==null){
-        }
-        System.out.println("shit");
-        Deck deck = new Deck();
-        deck.generateCards();
-        ConjuroMsg msg = new ConjuroMsg(Card.class);
-        msg.addObject(deck.getDeckCards()[0]);
-        server2.getServer().sendMessage(msg);
 
     }
 }

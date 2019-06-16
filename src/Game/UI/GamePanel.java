@@ -25,10 +25,10 @@ public class GamePanel extends IPanel implements Consts {
     private ClientSocket client;
     private ServerNet server;
 
-    public GamePanel(int Width, int Height, ClientSocket pClient) {
+    public GamePanel(int Width, int Height,Game pGame, ClientSocket pClient) {
+    	this.game= pGame;
         this.client = pClient;
         this.cardLabels = new ArrayList<>();
-        this.game = new Game();
         try {
             this.game.start();
         } catch (Exception e) {
@@ -41,10 +41,11 @@ public class GamePanel extends IPanel implements Consts {
 
     }
 
-    public GamePanel (int Width, int Height, ServerNet pServer) {
+    public GamePanel (int Width, int Height,Game pGame, ServerNet pServer) {
+    	this.game= pGame;
+
         this.server = pServer;
         this.cardLabels = new ArrayList<>();
-        this.game = new Game();
         try {
             this.game.start();
         } catch (Exception e) {

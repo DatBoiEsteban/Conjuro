@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class Player {
 	private Deck deck;
-	private Card[] oponentCards ;
 	private ArrayList<Card> cardsToSend;
 
 	public Player() throws Exception{
@@ -23,6 +22,10 @@ public class Player {
 			
 		
 	}
+
+
+
+
 
 	public Deck getDeck() {
 		return this.deck;

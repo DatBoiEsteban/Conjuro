@@ -5,35 +5,42 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import Lib.Observable;
 
 import Game.Card;
 import Game.Deck;
 import Game.Game;
+import Game.Player;
 import Lib.Consts;
 import Lib.IObserver;
 import Lib.Logger;
 import Net.ClientSocket;
 import Net.ServerNet;
 
-public class ConjuroComms implements IObserver, Consts {
+public class ConjuroComms extends Observable implements IObserver, Consts {
     private ClientSocket client;
     private static ServerNet server;
     private ArrayList<Card> otherPlayerCards;
-
+    private boolean Hosting;
     public ConjuroComms() {
-
+    	Hosting=false;
     }
 
     public void conectarAJuego(String pHost) {
 
         client = new ClientSocket(pHost, PORT_NUMBER);
         client.addObserver(this);
+        System.out.println("Joined");
+
     }
 
     public void iniciarJuegoNuevo() {
         try {
             server = new ServerNet(this);
             server.addObserver(this);
+            Hosting=true;
+            System.out.println("hosting");
+
 
         }catch (Exception e ) {
             Logger.Log(e.getMessage());
@@ -82,23 +89,15 @@ public class ConjuroComms implements IObserver, Consts {
     public Boolean isConnected() {
         return this.client.isConnected();
     }
-
+    public Boolean isHosting() {
+        return this.Hosting;
+    }
     public static void main(String [] args) throws  Exception
     {
 
 
-        ConjuroComms server2 = new ConjuroComms();
 
-        server2.conectarAJuego("127.0.0.1");
-        Deck deck = new Deck();
-        deck.generateCards();
-        ConjuroMsg msg = new ConjuroMsg(Card.class);
-        msg.addObject(deck.getDeckCards()[0]);
-        server2.getClient().sendMessage(msg);
-        while(true){
-            //System.out.println("Waiting");
-
-        }
+        
 
     }
 

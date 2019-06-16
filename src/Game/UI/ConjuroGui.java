@@ -1,6 +1,8 @@
 package UI;
 
 import ConjuroNet.ConjuroComms;
+import Game.Game;
+import Game.Player;
 import Lib.Consts;
 import Lib.Logger;
 
@@ -12,7 +14,9 @@ public class ConjuroGui extends JFrame implements Consts {
     private IPanel ScreenPanel;
     private ConjuroComms connection;
 
-    public ConjuroGui() {
+
+    public ConjuroGui(Game game,ConjuroComms pConnection) {
+    	connection=pConnection;
         this.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -41,23 +45,21 @@ public class ConjuroGui extends JFrame implements Consts {
                 } else if (ScreenPanel.getClass() == JoinPanel.class) {
                     if (((JoinPanel)ScreenPanel).getTextReady()) {
                         String Ip = ((JoinPanel)ScreenPanel).getIp();
-                        this.connection = new ConjuroComms();
                         this.connection.conectarAJuego(Ip);
                         if (this.connection.isConnected()) {
                             remove(ScreenPanel);
-                            ScreenPanel = new GamePanel(getWidth(), getHeight(), this.connection.getClient());
+                            ScreenPanel = new GamePanel(getWidth(), getHeight(), game,this.connection.getClient());
                             add(ScreenPanel);
                             repaint();
                         }
                     }
                 } else if (ScreenPanel.getClass() == HostPanel.class) {
-                    if (this.connection == null) {
-                        this.connection = new ConjuroComms();
+                    if (!this.connection.isHosting()) {
                         this.connection.iniciarJuegoNuevo();
                     } else {
                         if (this.connection.getServer().getClient() != null) {
                             remove(ScreenPanel);
-                            ScreenPanel = new GamePanel(getWidth(), getHeight(), this.connection.getServer());
+                            ScreenPanel = new GamePanel(getWidth(), getHeight(),game, this.connection.getServer());
                             add(ScreenPanel);
                             repaint();
                         }
@@ -80,6 +82,8 @@ public class ConjuroGui extends JFrame implements Consts {
     }
 
     public static void main(String[] args) {
-        ConjuroGui a = new ConjuroGui();
+    	ConjuroComms comms = new ConjuroComms();
+    	Game game = new Game(comms);
+        ConjuroGui a = new ConjuroGui(game,comms);
     }
 }
