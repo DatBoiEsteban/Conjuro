@@ -33,11 +33,13 @@ public class ConjuroComms implements IObserver, Consts {
     public void iniciarJuegoNuevo() {
         try {
             server = new ServerNet(this);
+            server.addObserver(this);
+
         }catch (Exception e ) {
             Logger.Log(e.getMessage());
         }
-    	server.startListening(this);
-        conectarAJuego("127.0.0.1");
+        server.startListening(this);
+        //  conectarAJuego("127.0.0.1");
 
     }
 
@@ -45,13 +47,13 @@ public class ConjuroComms implements IObserver, Consts {
         ConjuroMsg msg = (ConjuroMsg)pData;
         System.out.println("Recibido");
         if (msg.getType()==Deck.class) {
-        	System.out.println("Deck");
+            System.out.println("Deck");
         }
         else if (msg.getType() == ArrayList.class) {
             this.otherPlayerCards = ((ArrayList<Card>) msg.getObjs().get(0));
         }
 
-        
+
     }
 
     public ArrayList<Card> getOtherPlayerCards() {
@@ -62,34 +64,43 @@ public class ConjuroComms implements IObserver, Consts {
     }
 
     public ClientSocket getClient() {
-		return client;
-	}
+        return client;
+    }
 
-	public void setClient(ClientSocket client) {
-		this.client = client;
-	}
+    public void setClient(ClientSocket client) {
+        this.client = client;
+    }
 
-	public ServerNet getServer() {
-		return server;
-	}
+    public ServerNet getServer() {
+        return server;
+    }
 
-	public void setServer(ServerNet server) {
-		this.server = server;
-	}
+    public void setServer(ServerNet server) {
+        this.server = server;
+    }
 
-	public Boolean isConnected() {
+    public Boolean isConnected() {
         return this.client.isConnected();
     }
 
-	public static void main(String [] args) throws  Exception
+    public static void main(String [] args) throws  Exception
     {
-    	
-    	
-    	ConjuroComms server2 = new ConjuroComms();
-
-    	server2.conectarAJuego("127.0.0.1");
 
 
-}
-    
+        ConjuroComms server2 = new ConjuroComms();
+
+        server2.conectarAJuego("127.0.0.1");
+        Deck deck = new Deck();
+        deck.generateCards();
+        ConjuroMsg msg = new ConjuroMsg(Card.class);
+        msg.addObject(deck.getDeckCards()[0]);
+        server2.getClient().sendMessage(msg);
+        while(true){
+            //System.out.println("Waiting");
+
+        }
+
+    }
+
+
 }

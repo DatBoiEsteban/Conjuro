@@ -15,10 +15,18 @@ public class ClientSocket extends Observable implements Consts, Runnable {
     private Socket client;
     private ObjectInputStream inputReader;
     private ObjectOutputStream outputWriter;
-    private boolean isListening;
+    private boolean isListening=true;
     public ClientSocket(Socket pSocket) {
         this.client = pSocket;
         initReaders();
+    }
+
+    public Socket getClient() {
+        return client;
+    }
+
+    public void setClient(Socket client) {
+        this.client = client;
     }
 
     public ClientSocket(String pIp, int pPort) {
@@ -43,12 +51,11 @@ public class ClientSocket extends Observable implements Consts, Runnable {
     public void run() {
         while (isListening) {
             try {
-                System.out.println("Daar se la come");
                 ConjuroMsg msg = (ConjuroMsg)inputReader.readObject();
                 this.notifyObservers(msg);
                 Thread.sleep(THREAD_SLEEP_TIME);
             } catch (Exception ex) {
-                Logger.Log(ex.getMessage());
+                //Logger.Log(ex.getMessage());
             }
         }
     }
@@ -65,16 +72,17 @@ public class ClientSocket extends Observable implements Consts, Runnable {
     public void initReaders() {
         if(client != null) {
             try {
+                isListening = true;
+
                 Thread newThread = new Thread(this);
                 newThread.start();
-                this.run();
+                System.out.println("antes");
 
-                outputWriter = new ObjectOutputStream(client.getOutputStream());               
+                outputWriter = new ObjectOutputStream(client.getOutputStream());
                 inputReader = new ObjectInputStream(client.getInputStream());
-                isListening = true;
-         
+
             }
-             catch (Exception ex) {
+            catch (Exception ex) {
                 Logger.Log(ex.getMessage());
             }
         }
