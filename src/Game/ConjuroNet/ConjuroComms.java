@@ -76,7 +76,9 @@ public class ConjuroComms extends Observable implements IObserver, Consts {
         return this.otherPlayerCards;
     }
 
-
+    public void ClearOtherPlayerCards() {
+        this.otherPlayerCards = null;
+    }
     public ClientSocket getClient() {
         return client;
     }

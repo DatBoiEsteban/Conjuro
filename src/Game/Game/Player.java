@@ -43,6 +43,7 @@ public class Player {
 
 
 	public void ClearCardsSend() {
+		System.out.println("cleaned");
 		cardsToSend= new ArrayList<Card>();
 	}
 

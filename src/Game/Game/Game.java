@@ -22,6 +22,8 @@ public class Game implements Consts, Runnable {
 	private ConjuroComms Connection;
 	private boolean GameStarted;
 	private boolean Decrypted;
+	private int Round=1;
+
 	public boolean isDecrypted() {
 		return Decrypted;
 	}
@@ -30,7 +32,6 @@ public class Game implements Consts, Runnable {
 	}
 
 	private String Key;
-	private int Round;
 	
 	public int getRound() {
 		return Round;
@@ -41,13 +42,25 @@ public class Game implements Consts, Runnable {
 	public void startGame() throws Exception{
 		player = new Player();
 		GameStarted=true;
-		 Round=1;
         Thread listenThread = new Thread((Runnable) this);
         listenThread.start();
 
 
 	}
-    public void run() {
+	public void GameReset(){
+    	getPlayer().ClearCardsSend();
+    	getPlayer().setCardsSent(false);
+    	setDecrypted(false);
+    	getConnection().ClearOtherPlayerCards();
+    	setOponentCards(new ArrayList<Card>());
+	}
+    public ConjuroComms getConnection() {
+		return Connection;
+	}
+	public void setConnection(ConjuroComms connection) {
+		Connection = connection;
+	}
+	public void run() {
         while(GameStarted) {
     		if(Connection.getOtherPlayerCards()!=null&&Connection.getOtherPlayerCards().size()==3&&!Decrypted&&player.isCardsSent()){
     			oponentCards=Connection.getOtherPlayerCards();
@@ -61,6 +74,7 @@ public class Game implements Consts, Runnable {
 						Connection.getClient().sendMessage(pMsg);
 
 					}
+
 					Decrypted=true;
 					Round++;
 				} catch (Exception e) {

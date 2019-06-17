@@ -21,12 +21,11 @@ public class GamePanel extends IPanel implements Consts {
     private List<CardLabel> cardLabels;
     private List<CardLabel> otherPlayer;
 
-    private JLabel ElapsedTime;
+    JLabel ElapsedTime;
     private Long StartTime;
-    private JTextField ToDecrypt;
+    JTextField ToDecrypt;
     private ClientSocket client;
     private ServerNet server;
-    private boolean restarted;
 
     public GamePanel(int Width, int Height,Game pGame, ClientSocket pClient) {
     	this.game= pGame;
@@ -61,7 +60,7 @@ public class GamePanel extends IPanel implements Consts {
     }
     private void initComponents() {
 
-    	restarted=false;
+    	//restarted=false;
 
 
         PlayerDeck = this.game.getPlayer().getDeck().getDeckCards();
@@ -104,19 +103,7 @@ public class GamePanel extends IPanel implements Consts {
                     }
 
                 }
-                if(this.game.getRound()==2&&!restarted){
-                	this.game.getPlayer().ClearCardsSend();
-                	this.game.getPlayer().setCardsSent(false);
-                	removeAll();
-                    this.add(this.ToDecrypt);
-                    this.add(this.ElapsedTime);
-                	printPlayerCards();
-                	game.setOponentCards(new ArrayList<Card>());
-                	restarted = true;
-                	//add your elements
-                	revalidate();
-                	repaint();
-                }
+
                 try {
                     Thread.sleep(THREAD_SLEEP_TIME);
                 } catch (Exception e) {
