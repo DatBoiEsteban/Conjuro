@@ -43,10 +43,12 @@ public class CardLabel extends JLabel implements Consts, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
         if (this.Player.addCardsToSend(this.Player.getDeck().getDeckCards()[this.ListPos])){
+            System.out.println(this.Name);
+
             this.removeMouseListener(this);
         }
-        System.out.println(this.Name);
     }
 
     @Override

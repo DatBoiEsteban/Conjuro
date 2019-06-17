@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Player {
 	private Deck deck;
 	private ArrayList<Card> cardsToSend;
+	private boolean cardsSent;
 
 	public Player() throws Exception{
 		cardsToSend = new ArrayList<Card>();
@@ -25,6 +26,26 @@ public class Player {
 
 
 
+
+
+	public boolean isCardsSent() {
+		return cardsSent;
+	}
+
+
+
+
+
+	public void setCardsSent(boolean cardsSent) {
+		this.cardsSent = cardsSent;
+	}
+
+
+
+	public void ClearCardsSend() {
+		System.out.println("cleaned");
+		cardsToSend= new ArrayList<Card>();
+	}
 
 
 	public Deck getDeck() {
@@ -47,8 +68,6 @@ public class Player {
 		return this.cardsToSend;
 	}
 
-	public void clearCardsToSend() {
-		this.cardsToSend = new ArrayList<Card>();
-	}
+
 
 }

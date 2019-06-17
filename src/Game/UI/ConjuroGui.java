@@ -13,9 +13,12 @@ public class ConjuroGui extends JFrame implements Consts {
 
     private IPanel ScreenPanel;
     private ConjuroComms connection;
+    private Game game;
+    private boolean restarted;
 
-
-    public ConjuroGui(Game game,ConjuroComms pConnection) {
+    public ConjuroGui(Game pGame,ConjuroComms pConnection) {
+    	restarted=false;
+    	game=pGame;
     	connection=pConnection;
         this.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,6 +33,7 @@ public class ConjuroGui extends JFrame implements Consts {
         this.setVisible(true);
         Thread PanelChanger = new Thread(() -> {
             while (Thread.currentThread().isAlive()) {
+            	//repaint();
                 if (ScreenPanel.getClass() == StartPanel.class) {
                     if (((StartPanel) ScreenPanel).getHost()) {
                         remove(ScreenPanel);
@@ -66,10 +70,27 @@ public class ConjuroGui extends JFrame implements Consts {
                     }
                 } else if (ScreenPanel.getClass() == GamePanel.class) {
                     if (this.connection.getOtherPlayerCards() != null) {
+
                         ((GamePanel) ScreenPanel).setOtherPlayerCards(this.connection.getOtherPlayerCards());
+                       
                         repaint();
+                    }else if (game.isDecrypted()){
+                    	((GamePanel) ScreenPanel).removeCards();
+                    }
+                    if(this.game.getRound()==2&&!restarted){
+                    	this.game.GameReset();
+
+                    	((GamePanel) ScreenPanel).removeAll();
+                    	 ((GamePanel) ScreenPanel).add( ((GamePanel) ScreenPanel).ToDecrypt);
+                    	 ((GamePanel) ScreenPanel).add( ((GamePanel) ScreenPanel).ElapsedTime);
+                    	 ((GamePanel) ScreenPanel).printPlayerCards();
+                    	restarted = true;
+                    	//add your elements
+                    	revalidate();
+                    	repaint();
                     }
                 }
+ 
                 try {
                     Thread.sleep(THREAD_SLEEP_TIME);
                 } catch (Exception e) {
