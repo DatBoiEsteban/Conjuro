@@ -669,14 +669,14 @@ vector<string> *getFile(string pFilename) {
 vector<conjuro *> *conjuros = new vector<conjuro*>();
 void getConjuros(vector<string> *lines) {
     vector<conjuro *> *conjures = new vector<conjuro *>();
-    for (int i = 0; i < lines->size(); i += 4) {
+    for (int i = 0; i < lines->size(); i += 3) {
         conjuro *conjure = new conjuro();
         conjure->description = lines->at(i);
         conjure->digestValue = lines->at(i + 1);
-        conjure->AesKey = lines->at(i + 2);
+        //conjure->AesKey = lines->at(i + 2);
         uint8_t in[250];
-        for (int j = 0; j < lines->at(i + 3).size(); j++) {
-            in[j] = lines->at(i + 3)[j];
+        for (int j = 0; j < lines->at(i + 2).size(); j++) {
+            in[j] = lines->at(i + 2)[j];
         }
         conjure->AesEncription = (uint8_t *) malloc(sizeof(in));
         for (int p = 0; p < sizeof(in); p++) {
@@ -689,20 +689,20 @@ void getConjuros(vector<string> *lines) {
 
 void searchEnc(uint8_t *key) {
 #pragma omp parallel for ordered
-    for (conjuro *Conjure : *conjuros) {
+    for (int con = 0; con < conjuros->size(); con++) {
 #pragma omp ordered
         {
             struct AES_ctx ctx;
             uint8_t iv[16] = {0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff};
             AES_init_ctx_iv(&ctx, key, iv);
-            uint8_t *exit = Conjure->AesEncription;
+            uint8_t *exit = conjuros->at(con)->AesEncription;
             AES_CBC_decrypt_buffer(&ctx, exit, 250);
             string ex;
             for (int i = 0; i < sizeof(exit); i++) {
                 ex += exit[i];
             }
-            if (Conjure->digestValue == picosha2::hash256_hex_string(ex)) {
-                cout << Conjure->description<< endl;
+            if (conjuros->at(con)->digestValue == picosha2::hash256_hex_string(ex)) {
+                cout << conjuros->at(con)->description<< endl;
                 //break;
             }
         }
