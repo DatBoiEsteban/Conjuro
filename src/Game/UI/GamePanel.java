@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.List;
 
 public class GamePanel extends IPanel implements Consts {
+
     private Game game;
     private Card[] PlayerDeck;
     private List<CardLabel> cardLabels;
