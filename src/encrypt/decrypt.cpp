@@ -618,121 +618,103 @@ void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, uint32_t length)
 
 
 
-struct conjuro
-{
+struct conjuro {
     string description;
     string digestValue;
     string AesKey;
     uint8_t *AesEncription;
 };
 
-string converter(uint8_t *str){
-    return string((char *)str);
-}
-
-char *randstring(size_t length) {
-
-    static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    char *randomString = NULL;
-
-    if (length) {
-        randomString = (char *) malloc(sizeof(char) * (length +1));
-
-        if (randomString) {
-            for (int n = 0;n < length;n++) {
-                int key = rand() % (int)(sizeof(charset) -1);
-                randomString[n] = charset[key];
-            }
-
-            randomString[length] = '\0';
+int checkIfFound(string line) {
+    if (line.size() > 7) {
+        if (line.substr(line.size() - 8, line.size()) == "Descri: ") {
+            return 1;
+        } else if (line.substr(line.size() - 8, line.size()) == "Digest: ") {
+            return 2;
+        } else if (line.substr(line.size() - 8, line.size()) == "AESKEY: ") {
+            return 3;
+        } else if (line.substr(line.size() - 8, line.size()) == "ENCRIP: ") {
+            return 4;
         }
     }
-
-    return randomString;
+    return 0;
 }
 
-vector<string>* getFile(string pFileName) {
+vector<string> *getFile(string pFilename) {
     ifstream file;
-    file.open((const char*)pFileName.c_str());
+    file.open((const char *) pFilename.c_str());
     vector<string> *lines = new vector<string>();
+
     if (file.is_open()) {
         string line;
-        while (getline(file, line)) {
-            lines->push_back(line);
+        char c;
+        for (int i = 0; i < 8; i++) {
+            file.get(c);
         }
-        file.close();
+        while (file.get(c)) {
+            int resp = checkIfFound(line);
+            if (resp == 0) {
+                line += c;
+            } else {
+                line = line.substr(0, line.size() - 9);
+                lines->push_back(line);
+                cout << line << endl;
+                line = c;
+            }
+        }
+        lines->push_back(line);
     }
     return lines;
 }
+vector<conjuro *> *conjuros = new vector<conjuro*>();
+void getConjuros(vector<string> *lines) {
+    vector<conjuro *> *conjures = new vector<conjuro *>();
+    for (int i = 0; i < lines->size(); i += 4) {
+        conjuro *conjure = new conjuro();
+        conjure->description = lines->at(i);
+        conjure->digestValue = lines->at(i + 1);
+        conjure->AesKey = lines->at(i + 2);
+        uint8_t in[250];
+        for (int j = 0; j < lines->at(i + 3).size(); j++) {
+            in[j] = lines->at(i + 3)[j];
+        }
+        conjure->AesEncription = (uint8_t *) malloc(sizeof(in));
+        for (int p = 0; p < sizeof(in); p++) {
+            conjure->AesEncription[p] = in[p];
+        }
+        conjures->push_back(conjure);
+    }
+    conjuros = conjures;
+}
 
-void getBook(vector<conjuro*> *pConjuros) {
-    vector<string> *lines = getFile("./Conjures.txt");
+void searchEnc(uint8_t *key) {
 #pragma omp parallel for ordered
-    for (int i = 0; i < lines->size(); i++) {
+    for (conjuro *Conjure : *conjuros) {
 #pragma omp ordered
         {
-            pConjuros->at(i) = new conjuro();
-            pConjuros->at(i)->description = lines->at(i);
-            pConjuros->at(i)->digestValue = picosha2::hash256_hex_string(lines->at(i));
             struct AES_ctx ctx;
             uint8_t iv[16] = {0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff};
-            char *sKey = randstring(32);
-            pConjuros->at(i)->AesKey = sKey;
-            uint8_t key[32];
-            for (int j = 0; j < 32; j++) {
-                key[j] = sKey[j];
-            }
             AES_init_ctx_iv(&ctx, key, iv);
-
-            uint8_t in[250] = { 0 };
-            for (int j = 0; j < 250; j++) {
-                if (i < pConjuros->at(i)->description.size()) {
-                    in[j] = pConjuros->at(i)->description[j];
-                } else {
-                    in[j] = 0x20;
-                }
+            uint8_t *exit = Conjure->AesEncription;
+            AES_CBC_decrypt_buffer(&ctx, exit, 250);
+            string ex;
+            for (int i = 0; i < sizeof(exit); i++) {
+                ex += exit[i];
             }
-            cout << "Should be text: " << in << endl;
-            AES_CBC_encrypt_buffer(&ctx, in, 250);
-
-            cout << "Encripted: " << in << endl;
-
-            pConjuros->at(i)->AesEncription = (uint8_t *) malloc(sizeof(in));
-            for (int p = 0; p < sizeof(in); p++) {
-                pConjuros->at(i)->AesEncription[p] = in[p];
+            if (Conjure->digestValue == picosha2::hash256_hex_string(ex)) {
+                cout << Conjure->description<< endl;
+                //break;
             }
         }
     }
 }
 
-string getJson(conjuro *pConjuro) {
-    string json = "{\"description\":";
-    json += "\"" + pConjuro->description + "\",\"digest\":";
-    json += "\"" + pConjuro->digestValue +"\",\"aesKey\":";
-    json += "\"" + pConjuro->AesKey + "\",\"aesEncryption\":";
-    json += "\"";
-    for (int enc = 0; enc < sizeof(pConjuro->AesEncription); enc++) {
-        json += pConjuro->AesEncription[enc];
-        json += ",";
+int main(int argc, char *argv[]) {
+    vector<string> *lines = getFile("Book.txt");
+    getConjuros(lines);
+    uint8_t key[32];
+    for (int j = 0; j < 32; j++) {
+        key[j] = argv[1][j];
     }
-    json.substr(0, json.size() - 1);
-    json += "\"}";
-    return json;
-}
-
-void createBookFile(vector<conjuro*> *pBook) {
-    ofstream Conjures;
-    Conjures.open("Book.txt");
-    for (int i = 0; i < pBook->size(); i++) {
-        Conjures << "Descri: " << pBook->at(i)->description << endl;
-        Conjures << "Digest: " << pBook->at(i)->digestValue << endl;
-        Conjures << "AESKEY: " << pBook->at(i)->AesKey << endl;
-        Conjures << "ENCRIP: " << pBook->at(i)->AesEncription << endl;
-    }
-}
-
-int main() {
-    vector<struct conjuro*> *book = new vector<struct conjuro*>(100);
-    getBook(book);
-    createBookFile(book);
+    searchEnc(key);
 }
