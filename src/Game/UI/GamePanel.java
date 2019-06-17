@@ -16,7 +16,6 @@ import java.util.*;
 import java.util.List;
 
 public class GamePanel extends IPanel implements Consts {
-
     private Game game;
     private Card[] PlayerDeck;
     private List<CardLabel> cardLabels;
@@ -92,6 +91,7 @@ public class GamePanel extends IPanel implements Consts {
                 if (minute == 12) {
                     System.exit(0);
                 }
+                setText(game.getPlayer().getKey());
                 ArrayList<Card> cardsToSend = this.game.getPlayer().getCardsToSend();
                 if (cardsToSend.size() > 2 &&   !this.game.getPlayer().isCardsSent()) {
                     ConjuroMsg msg = new ConjuroMsg(ArrayList.class);
@@ -127,6 +127,9 @@ public class GamePanel extends IPanel implements Consts {
         	this.remove(otherPlayer.get(i));
 
         }
+    }
+    public void setText(String pText) {
+        this.ToDecrypt.setText(pText);
     }
     public void setOtherPlayerCards(ArrayList<Card> pCards) {
     	otherPlayer= new ArrayList<CardLabel>();

@@ -8,9 +8,12 @@ import java.util.ArrayList;
 public class Player {
 	private Deck deck;
 	private ArrayList<Card> cardsToSend;
-	private boolean cardsSent;
+	private ArrayList<Boolean> Loses;
+	private String Key;
 
+	private boolean cardsSent;
 	public Player() throws Exception{
+		Loses= new ArrayList<Boolean>();
 		cardsToSend = new ArrayList<Card>();
 		FileManager file = new FileManager();
 		deck=(Deck) file.ReadObjectToFile("deck.dck");
@@ -22,6 +25,38 @@ public class Player {
 		}
 			
 		
+	}
+
+
+
+
+
+	public String getKey() {
+		return Key;
+	}
+
+
+
+
+
+	public void setKey(String key) {
+		Key = key;
+	}
+
+
+
+
+
+	public ArrayList<Boolean> getLoses() {
+		return Loses;
+	}
+
+
+
+
+
+	public void setLoses(ArrayList<Boolean> loses) {
+		Loses = loses;
 	}
 
 

@@ -4,6 +4,7 @@ import ConjuroNet.ConjuroComms;
 import Game.Game;
 import Game.Player;
 import Lib.Consts;
+import Lib.EncriptionReader;
 import Lib.Logger;
 
 import javax.swing.*;
@@ -102,8 +103,9 @@ public class ConjuroGui extends JFrame implements Consts {
     }
 
     public static void main(String[] args) {
+    	EncriptionReader reader = new EncriptionReader("keys.txt");
     	ConjuroComms comms = new ConjuroComms();
-    	Game game = new Game(comms);
+    	Game game = new Game(comms,reader.getRandomKey());
         ConjuroGui  GUI = new ConjuroGui(game,comms);
     }
 }
