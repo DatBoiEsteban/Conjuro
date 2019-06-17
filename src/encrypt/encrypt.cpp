@@ -723,10 +723,12 @@ string getJson(conjuro *pConjuro) {
 void createBookFile(vector<conjuro*> *pBook) {
     ofstream Conjures;
     Conjures.open("Book.txt");
+    ofstream keys;
+    keys.open("keys.txt");
     for (int i = 0; i < pBook->size(); i++) {
         Conjures << "Descri: " << pBook->at(i)->description << endl;
         Conjures << "Digest: " << pBook->at(i)->digestValue << endl;
-        Conjures << "AESKEY: " << pBook->at(i)->AesKey << endl;
+        keys << pBook->at(i)->AesKey << endl;
         Conjures << "ENCRIP: " << pBook->at(i)->AesEncription << endl;
     }
 }
