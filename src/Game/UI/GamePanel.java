@@ -93,6 +93,7 @@ public class GamePanel extends IPanel implements Consts {
                 if (minute == 12) {
                     System.exit(0);
                 }
+                setText(game.getPlayer().getKey());
                 ArrayList<Card> cardsToSend = this.game.getPlayer().getCardsToSend();
                 if (cardsToSend.size() > 2 ) {
                     ConjuroMsg msg = new ConjuroMsg(ArrayList.class);
@@ -115,6 +116,11 @@ public class GamePanel extends IPanel implements Consts {
         timeTread.start();
     }
 
+        }
+    }
+    public void setText(String pText) {
+        this.ToDecrypt.setText(pText);
+    }
     public void setOtherPlayerCards(ArrayList<Card> pCards) {
         for (int i = 0; i < pCards.size(); i++) {
             CardLabel cardLabel = new CardLabel(pCards.get(i).getImagen(), 300 * (i + 1), 450 - CARD_HEIGHT / 2, i);

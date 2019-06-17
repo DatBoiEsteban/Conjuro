@@ -23,7 +23,8 @@ public class Game implements Consts, Runnable {
 	private boolean GameStarted;
 	private boolean Decrypted;
 	private int Round=1;
-
+	private String Key;
+	
 	public boolean isDecrypted() {
 		return Decrypted;
 	}
@@ -31,7 +32,6 @@ public class Game implements Consts, Runnable {
 		Decrypted = decrypted;
 	}
 
-	private String Key;
 	
 	public int getRound() {
 		return Round;
@@ -62,10 +62,13 @@ public class Game implements Consts, Runnable {
 	}
 	public void run() {
         while(GameStarted) {
+
     		if(Connection.getOtherPlayerCards()!=null&&Connection.getOtherPlayerCards().size()==3&&!Decrypted&&player.isCardsSent()){
     			oponentCards=Connection.getOtherPlayerCards();
     			try {
 					decryptCards() ;
+		        	if(!Connection.isLoser()){
+		        	
 					ConjuroMsg pMsg = new ConjuroMsg(boolean.class);
 					pMsg.addObject(true);
 					if(Connection.getServer()!=null)
@@ -73,7 +76,10 @@ public class Game implements Consts, Runnable {
 					else{
 						Connection.getClient().sendMessage(pMsg);
 
-					}
+						}
+		        	}	
+		        	player.setKey(Key.substring(0, 16*Round));
+		        	player.getLoses().add(Connection.isLoser());
 
 					Decrypted=true;
 					Round++;
@@ -93,7 +99,8 @@ public class Game implements Consts, Runnable {
         }
      
     }
-	public  Game(ConjuroComms pConnection){
+	public  Game(ConjuroComms pConnection, String pKey){
+		Key = pKey;
 		Connection=pConnection;
 	}
 

@@ -83,10 +83,9 @@ public class ConjuroGui extends JFrame implements Consts {
     }
 
     public static void main(String[] args) {
+    	EncriptionReader reader = new EncriptionReader("keys.txt");
     	ConjuroComms comms = new ConjuroComms();
-        EncriptionReader reader = new EncriptionReader("keys.txt");
-    	Game game = new Game(comms, reader.getRandomKey());
-
-        ConjuroGui a = new ConjuroGui(game,comms);
+    	Game game = new Game(comms,reader.getRandomKey());
+        ConjuroGui  GUI = new ConjuroGui(game,comms);
     }
 }
